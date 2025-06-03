@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Management Dashboard</title>
+  <style>
+    /* -------------------------------
+       Albertsons Blue Theme & Reset
+    ------------------------------- */
+    :root {
+      --primary-blue: #0055A4;
+      --accent-blue: #1E90FF;
+      --light-bg: #f5f5f5;
+      --text-dark: #333;
+      --card-bg: #ffffff;
+      --border-radius: 8px;
+      --gap: 16px;
+      --danger-red: #e74c3c;
+      --warning-orange: #e67e22;
+      --caution-yellow: #f1c40f;
+      --safe-green: #2ecc71;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--light-bg);
+      color: var(--text-dark);
+      line-height: 1.4;
+      padding: var(--gap);
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding-bottom: var(--gap);
+      margin-bottom: var(--gap);
+      border-bottom: 2px solid var(--primary-blue);
+    }
+    header h1 {
+      color: var(--primary-blue);
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    header p {
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+
+    /* Container for Enterprise Priorities */
+    .ep-container {
+      display: flex;
+      gap: var(--gap);
+      margin-bottom: var(--gap);
+    }
+    .ep {
+      background: var(--primary-blue);
+      color: white;
+      padding: 12px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* Container for Areas of Focus & Assets */
+    .aof-container {
+      display: flex;
+      gap: var(--gap);
+      margin-bottom: var(--gap);
+    }
+    .aof {
+      background: var(--accent-blue);
+      color: white;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      font-weight: 600;
+    }
+    .assets-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      margin-top: 8px;
+    }
+
+    /* Asset Card */
+    .asset-card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 12px;
+      position: relative;
+    }
+    .asset-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .asset-owner {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .progress-bars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .progress-bar {
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      height: 16px;
+    }
+    .progress-bar .fill {
+      height: 100%;
+      background: var(--accent-blue);
+    }
+    .progress-label {
+      font-size: 0.75rem;
+      text-align: center;
+      margin-top: 4px;
+    }
+    /* Status Indicator */
+    .status-indicator {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+    .status-safe { background: var(--safe-green); }
+    .status-caution { background: var(--caution-yellow); }
+    .status-warning { background: var(--warning-orange); }
+    .status-danger { background: var(--danger-red); }
+
+    /* Scrollable Containers */
+    .scrollable {
+      overflow-x: auto;
+      padding-bottom: var(--gap);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .ep-container, .aof-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Portfolio Management Dashboard</h1>
+    <p>Organize Initiatives by Enterprise Priority → Areas of Focus → Assets</p>
+  </header>
+
+  <!-- Containers will be injected by JavaScript -->
+  <div class="scrollable" id="epRow"></div>
+  <div class="scrollable" id="aofRow"></div>
+
+  <footer style="text-align:center; margin-top: var(--gap); font-size:0.9rem; color:#777;">
+    © 2025 Strategy Team
+  </footer>
+
+  <script>
+    // -------------------------------
+    // Configuration Data
+    // -------------------------------
+    const config = {
+      enterprisePriorities: [
+        { id: "EP1", name: "Enterprise Priority 1" },
+        { id: "EP2", name: "Enterprise Priority 2" },
+        { id: "EP3", name: "Enterprise Priority 3" },
+        { id: "EP4", name: "Enterprise Priority 4" },
+        { id: "EP5", name: "Enterprise Priority 5" }
+      ],
+      areasOfFocus: [
+        { id: "AOF1", name: "Area of Focus 1", ep: "EP1" },
+        { id: "AOF2", name: "Area of Focus 2", ep: "EP1" },
+        { id: "AOF3", name: "Area of Focus 3", ep: "EP2" },
+        { id: "AOF4", name: "Area of Focus 4", ep: "EP3" },
+        { id: "AOF5", name: "Area of Focus 5", ep: "EP3" },
+        { id: "AOF6", name: "Area of Focus 6", ep: "EP4" },
+        { id: "AOF7", name: "Area of Focus 7", ep: "EP5" }
+      ],
+      assets: [
+        // AOF1
+        {
+          aof: "AOF1",
+          name: "Asset 1A",
+          owner: "Alice",
+          start: "2025-01-01",
+          end:   "2025-06-30",
+          spent: 50000,
+          budget: 100000,
+          completedPoints: 40,
+          totalPoints: 100
+        },
+        {
+          aof: "AOF1",
+          name: "Asset 1B",
+          owner: "Bob",
+          start: "2025-03-01",
+          end:   "2025-09-30",
+          spent: 70000,
+          budget: 70000,
+          completedPoints: 80,
+          totalPoints: 100
+        },
+        // AOF2
+        {
+          aof: "AOF2",
+          name: "Asset 2A",
+          owner: "Carol",
+          start: "2025-02-15",
+          end:   "2025-05-15",
+          spent: 30000,
+          budget: 50000,
+          completedPoints: 60,
+          totalPoints: 100
+        },
+        // AOF3
+        {
+          aof: "AOF3",
+          name: "Asset 3A",
+          owner: "David",
+          start: "2025-01-20",
+          end:   "2025-04-20",
+          spent: 45000,
+          budget: 60000,
+          completedPoints: 50,
+          totalPoints: 100
+        },
+        // AOF4
+        {
+          aof: "AOF4",
+          name: "Asset 4A",
+          owner: "Eve",
+          start: "2025-04-01",
+          end:   "2025-10-01",
+          spent: 20000,
+          budget: 80000,
+          completedPoints: 20,
+          totalPoints: 100
+        },
+        {
+          aof: "AOF4",
+          name: "Asset 4B",
+          owner: "Frank",
+          start: "2025-02-01",
+          end:   "2025-08-01",
+          spent: 60000,
+          budget: 90000,
+          completedPoints: 70,
+          totalPoints: 100
+        },
+        // AOF5
+        {
+          aof: "AOF5",
+          name: "Asset 5A",
+          owner: "Grace",
+          start: "2025-03-10",
+          end:   "2025-07-10",
+          spent: 30000,
+          budget: 40000,
+          completedPoints: 30,
+          totalPoints: 100
+        },
+        // AOF6
+        {
+          aof: "AOF6",
+          name: "Asset 6A",
+          owner: "Heidi",
+          start: "2025-01-05",
+          end:   "2025-12-31",
+          spent: 100000,
+          budget: 150000,
+          completedPoints: 50,
+          totalPoints: 100
+        },
+        // AOF7
+        {
+          aof: "AOF7",
+          name: "Asset 7A",
+          owner: "Ivan",
+          start: "2025-05-01",
+          end:   "2025-09-30",
+          spent: 20000,
+          budget: 50000,
+          completedPoints: 20,
+          totalPoints: 100
+        }
+      ]
+    };
+
+    // -------------------------------
+    // Utility Functions
+    // -------------------------------
+    function daysBetween(date1, date2) {
+      const msPerDay = 1000 * 60 * 60 * 24;
+      return Math.round((date2 - date1) / msPerDay);
+    }
+    function calculatePercentages(asset) {
+      const today = new Date();
+      const startDate = new Date(asset.start);
+      const endDate = new Date(asset.end);
+      const totalDays = daysBetween(startDate, endDate);
+      const elapsedDays = daysBetween(startDate, today);
+      const percentTime = Math.min(Math.max((elapsedDays / totalDays) * 100, 0), 100);
+
+      const percentBudget = Math.min((asset.spent / asset.budget) * 100, 100);
+      const percentScope = Math.min((asset.completedPoints / asset.totalPoints) * 100, 100);
+
+      return {
+        time: Math.round(percentTime),
+        budget: Math.round(percentBudget),
+        scope: Math.round(percentScope)
+      };
+    }
+    function getStatusColor(percs) {
+      const values = [percs.time, percs.budget, percs.scope];
+      const maxVal = Math.max(...values);
+      const minVal = Math.min(...values);
+      const diff = maxVal - minVal;
+      if (diff <= 10) return 'status-safe';
+      if (diff <= 20) return 'status-caution';
+      if (diff <= 30) return 'status-warning';
+      return 'status-danger';
+    }
+
+    // -------------------------------
+    // Render Functions
+    // -------------------------------
+    function render() {
+      const epRow = document.getElementById('epRow');
+      const aofRow = document.getElementById('aofRow');
+
+      // Count AOFs per EP
+      const aofsByEp = {};
+      config.enterprisePriorities.forEach(ep => {
+        aofsByEp[ep.id] = config.areasOfFocus.filter(aof => aof.ep === ep.id);
+      });
+
+      // Render Enterprise Priorities
+      epRow.innerHTML = '';
+      config.enterprisePriorities.forEach(ep => {
+        const count = aofsByEp[ep.id].length || 1;
+        const epDiv = document.createElement('div');
+        epDiv.className = 'ep';
+        epDiv.style.flex = count; // width proportional to number of AOFs
+        epDiv.textContent = ep.name;
+        epRow.appendChild(epDiv);
+      });
+
+      // Render Areas of Focus and Assets under each, in same order
+      aofRow.innerHTML = '';
+      config.enterprisePriorities.forEach(ep => {
+        const aofs = aofsByEp[ep.id];
+        aofs.forEach(aof => {
+          const aofContainer = document.createElement('div');
+          aofContainer.style.flex = 1;
+          aofContainer.style.display = 'flex';
+          aofContainer.style.flexDirection = 'column';
+          aofContainer.style.gap = '8px';
+
+          // AOF heading
+          const aofDiv = document.createElement('div');
+          aofDiv.className = 'aof';
+          aofDiv.textContent = aof.name;
+          aofContainer.appendChild(aofDiv);
+
+          // Assets under this AOF
+          const assetsDiv = document.createElement('div');
+          assetsDiv.className = 'assets-container';
+          const assets = config.assets.filter(asset => asset.aof === aof.id);
+          assets.forEach(asset => {
+            const percs = calculatePercentages(asset);
+            const statusClass = getStatusColor(percs);
+
+            const card = document.createElement('div');
+            card.className = 'asset-card';
+
+            // Status indicator dot
+            const statusDot = document.createElement('div');
+            statusDot.className = `status-indicator ${statusClass}`;
+            card.appendChild(statusDot);
+
+            // Header: name & owner
+            const header = document.createElement('div');
+            header.className = 'asset-header';
+            header.textContent = asset.name;
+            const ownerSpan = document.createElement('div');
+            ownerSpan.className = 'asset-owner';
+            ownerSpan.textContent = `Owner: ${asset.owner}`;
+            card.appendChild(header);
+            card.appendChild(ownerSpan);
+
+            // Progress bars
+            const barsContainer = document.createElement('div');
+            barsContainer.className = 'progress-bars';
+
+            ['time','budget','scope'].forEach(dim => {
+              const wrapper = document.createElement('div');
+              const bar = document.createElement('div');
+              bar.className = 'progress-bar';
+              const fill = document.createElement('div');
+              fill.className = 'fill';
+              fill.style.width = `${percs[dim]}%`;
+              bar.appendChild(fill);
+              const label = document.createElement('div');
+              label.className = 'progress-label';
+              label.textContent = `${dim.charAt(0).toUpperCase() + dim.slice(1)}: ${percs[dim]}%`;
+              wrapper.appendChild(bar);
+              wrapper.appendChild(label);
+              barsContainer.appendChild(wrapper);
+            });
+
+            card.appendChild(barsContainer);
+            assetsDiv.appendChild(card);
+          });
+
+          aofContainer.appendChild(assetsDiv);
+          aofRow.appendChild(aofContainer);
+        });
+
+        // If an EP has no AOFs, still add a placeholder column
+        if (aofs.length === 0) {
+          const placeholder = document.createElement('div');
+          placeholder.style.flex = 1;
+          aofRow.appendChild(placeholder);
+        }
+      });
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+</html>
