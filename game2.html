@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock-Paper-Scissors</title>
+  <style>
+    /* Self‐contained CSS */
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #0066cc;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .game-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .game-container h1 {
+      margin-bottom: 20px;
+    }
+    .choices {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .choices button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: 2px solid #0066cc;
+      background: white;
+      border-radius: 4px;
+    }
+    .choices button:hover {
+      background: #e6f0ff;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      color: #777;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Rock-Paper-Scissors</h1>
+  </header>
+
+  <div class="game-container">
+    <div class="choices">
+      <button data-choice="rock">✊ Rock</button>
+      <button data-choice="paper">✋ Paper</button>
+      <button data-choice="scissors">✌️ Scissors</button>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <div class="footer">
+    <a href="index.html">Back to Home</a>
+  </div>
+
+  <script>
+    (function() {
+      const choices = ['rock','paper','scissors'];
+      const buttons = document.querySelectorAll('.choices button');
+      const resultEl = document.getElementById('result');
+
+      function getComputerChoice() {
+        return choices[Math.floor(Math.random() * 3)];
+      }
+      function determineWinner(player, computer) {
+        if (player === computer) return 'It’s a tie!';
+        if (
+          (player === 'rock' && computer === 'scissors') ||
+          (player === 'paper' && computer === 'rock') ||
+          (player === 'scissors' && computer === 'paper')
+        ) {
+          return 'You win! 🎉';
+        }
+        return 'Computer wins! 🤖';
+      }
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const playerChoice = btn.dataset.choice;
+          const computerChoice = getComputerChoice();
+          const message = `You chose <strong>${playerChoice}</strong>. Computer chose <strong>${computerChoice}</strong>.<br>${determineWinner(playerChoice, computerChoice)}`;
+          resultEl.innerHTML = message;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
