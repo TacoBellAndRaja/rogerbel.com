@@ -3,36 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Landing Page</title>
+  <title>My Cool Site</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Header / Navbar -->
   <header>
-    <h1>Welcome to My Site</h1>
+    <div class="logo">My Cool Site</div>
     <nav>
       <a href="#games">Games</a>
       <a href="recipes.html">Recipes</a>
     </nav>
   </header>
 
-  <main>
-    <section id="games">
-      <h2>Games</h2>
-      <ul>
-        <li><a href="game1.html">Guess a Number</a></li>
-        <li><a href="game2.html">Rock-Paper-Scissors</a></li>
-        <li><a href="game3.html">Color Changer</a></li>
-      </ul>
-    </section>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome to My Cool Site</h1>
+    <p>Discover fun, silly games and mouth-watering recipes—all in one place. Click below to get started!</p>
+    <div class="cta">
+      <a href="#games" class="btn btn-games">Games</a>
+      <a href="recipes.html" class="btn btn-recipes">Recipes</a>
+    </div>
+  </section>
 
-    <section id="recipes">
-      <h2>Recipes</h2>
-      <p>Check out our <a href="recipes.html">Recipes</a> page for tasty ideas!</p>
-    </section>
-  </main>
+  <!-- Games Section (Card Grid) -->
+  <section id="games" class="sections">
+    <!-- Card: Guess a Number -->
+    <div class="card">
+      <div class="card-icon">🎲</div>
+      <div class="card-content">
+        <h3>Guess a Number</h3>
+        <p>Try to guess the secret number between 1 and 20. Are you lucky?</p>
+        <a href="game1.html">Play Now</a>
+      </div>
+    </div>
 
-  <div class="footer">
-    <p>© 2025 My Site. All rights reserved.</p>
-  </div>
+    <!-- Card: Rock-Paper-Scissors -->
+    <div class="card">
+      <div class="card-icon">✊</div>
+      <div class="card-content">
+        <h3>Rock-Paper-Scissors</h3>
+        <p>Classic showdown—pick rock, paper, or scissors and face off against the computer.</p>
+        <a href="game2.html">Play Now</a>
+      </div>
+    </div>
+
+    <!-- Card: Color Changer -->
+    <div class="card">
+      <div class="card-icon">🎨</div>
+      <div class="card-content">
+        <h3>Color Changer</h3>
+        <p>Click a button to instantly shift the page's background to a random color.</p>
+        <a href="game3.html">Play Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2025 My Cool Site. All Rights Reserved.</p>
+  </footer>
+
 </body>
 </html>
