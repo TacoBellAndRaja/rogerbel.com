@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guess a Number</title>
+  <style>
+    /* Self‐contained CSS */
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #0066cc;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .game-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .game-container h1 {
+      margin-bottom: 20px;
+    }
+    input[type="number"] {
+      padding: 8px;
+      font-size: 1rem;
+      width: 60px;
+      text-align: center;
+    }
+    button {
+      padding: 8px 16px;
+      margin-left: 10px;
+      font-size: 1rem;
+      background: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005bb5;
+    }
+    #feedback {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      color: #777;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Guess a Number</h1>
+  </header>
+
+  <div class="game-container">
+    <p>I'm thinking of a number between 1 and 20.</p>
+    <div>
+      <input type="number" id="guessInput" min="1" max="20" />
+      <button id="submitGuess">Guess</button>
+    </div>
+    <div id="feedback"></div>
+  </div>
+
+  <div class="footer">
+    <a href="index.html">Back to Home</a>
+  </div>
+
+  <script>
+    (function() {
+      const target = Math.floor(Math.random() * 20) + 1;
+      const feedbackEl = document.getElementById('feedback');
+      const guessInput = document.getElementById('guessInput');
+      const submitBtn = document.getElementById('submitGuess');
+
+      submitBtn.addEventListener('click', () => {
+        const guess = parseInt(guessInput.value, 10);
+        if (isNaN(guess) || guess < 1 || guess > 20) {
+          feedbackEl.textContent = 'Please enter a number between 1 and 20.';
+          return;
+        }
+        if (guess === target) {
+          feedbackEl.textContent = '🎉 Correct! You guessed it.';
+        } else if (guess < target) {
+          feedbackEl.textContent = 'Too low. Try again!';
+        } else {
+          feedbackEl.textContent = 'Too high. Try again!';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
