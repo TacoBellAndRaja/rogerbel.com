@@ -51,8 +51,8 @@
       color: var(--text-dark);
     }
 
-    /* Container for Enterprise Priorities */
-    .ep-container {
+    /* Enterprise Priorities Row */
+    #epRow {
       display: flex;
       gap: var(--gap);
       margin-bottom: var(--gap);
@@ -66,11 +66,17 @@
       font-weight: bold;
     }
 
-    /* Container for Areas of Focus & Assets */
-    .aof-container {
+    /* Areas of Focus Row */
+    #aofRow {
       display: flex;
       gap: var(--gap);
       margin-bottom: var(--gap);
+    }
+    .aof-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
     .aof {
       background: var(--accent-blue);
@@ -84,7 +90,6 @@
       display: flex;
       flex-direction: column;
       gap: var(--gap);
-      margin-top: 8px;
     }
 
     /* Asset Card */
@@ -140,15 +145,9 @@
     .status-warning { background: var(--warning-orange); }
     .status-danger { background: var(--danger-red); }
 
-    /* Scrollable Containers */
-    .scrollable {
-      overflow-x: auto;
-      padding-bottom: var(--gap);
-    }
-
     /* Responsive */
     @media (max-width: 768px) {
-      .ep-container, .aof-container {
+      #epRow, #aofRow {
         flex-direction: column;
       }
     }
@@ -161,9 +160,11 @@
     <p>Organize Initiatives by Enterprise Priority → Areas of Focus → Assets</p>
   </header>
 
-  <!-- Containers will be injected by JavaScript -->
-  <div class="scrollable" id="epRow"></div>
-  <div class="scrollable" id="aofRow"></div>
+  <!-- Enterprise Priorities Row -->
+  <div id="epRow"></div>
+
+  <!-- Areas of Focus & Assets Row -->
+  <div id="aofRow"></div>
 
   <footer style="text-align:center; margin-top: var(--gap); font-size:0.9rem; color:#777;">
     © 2025 Strategy Team
@@ -348,8 +349,11 @@
         aofsByEp[ep.id] = config.areasOfFocus.filter(aof => aof.ep === ep.id);
       });
 
-      // Render Enterprise Priorities
+      // Clear old content
       epRow.innerHTML = '';
+      aofRow.innerHTML = '';
+
+      // Render Enterprise Priorities
       config.enterprisePriorities.forEach(ep => {
         const count = aofsByEp[ep.id].length || 1;
         const epDiv = document.createElement('div');
@@ -359,16 +363,12 @@
         epRow.appendChild(epDiv);
       });
 
-      // Render Areas of Focus and Assets under each, in same order
-      aofRow.innerHTML = '';
+      // Render Areas of Focus and Assets
       config.enterprisePriorities.forEach(ep => {
         const aofs = aofsByEp[ep.id];
         aofs.forEach(aof => {
           const aofContainer = document.createElement('div');
-          aofContainer.style.flex = 1;
-          aofContainer.style.display = 'flex';
-          aofContainer.style.flexDirection = 'column';
-          aofContainer.style.gap = '8px';
+          aofContainer.className = 'aof-container';
 
           // AOF heading
           const aofDiv = document.createElement('div');
