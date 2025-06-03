@@ -1,107 +1,2537 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guess a Number</title>
+  <meta charset="UTF-8"/>
+  <title>Roger &amp; Chloe – Candy, Flying &amp; Underwater (Coins &amp; Boat)</title>
   <style>
-    /* Self‐contained CSS */
-    body {
-      font-family: Arial, sans-serif;
-      background: #fafafa;
+    html, body {
       margin: 0;
       padding: 0;
+      background: #111;
+      font-family: sans-serif;
+      user-select: none;
+      overflow: hidden;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      align-items: center;
+      justify-content: flex-start;
     }
-    header {
-      background: #0066cc;
-      color: white;
-      padding: 15px;
+    #wrapper {
+      display: flex;
+      width: 1000px;
+      height: 700px;
+      position: relative;
+    }
+    .sidebar {
+      width: 150px;
+      background: #000;
+      border: 4px solid #0f0;
+      box-sizing: border-box;
+      padding: 10px;
+      overflow-y: auto;
+      font-family: "Courier New", monospace;
+      color: #0f0;
+      text-shadow: 1px 1px 0 #050;
+      box-shadow: 0 0 10px #0f0;
+    }
+    .sidebar h3 {
+      margin: 0 0 10px;
       text-align: center;
+      font-size: 14px;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #0f0;
+      padding-bottom: 4px;
     }
-    .game-container {
+    .currentScore {
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 8px;
+      padding: 4px;
+      background: #111;
+      border: 2px inset #0f0;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+    #centerArea {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
+    }
+    #cheats {
+      width: 800px;
+      display: flex;
       justify-content: center;
+      margin: 10px 0;
     }
-    .game-container h1 {
-      margin-bottom: 20px;
-    }
-    input[type="number"] {
-      padding: 8px;
-      font-size: 1rem;
-      width: 60px;
-      text-align: center;
-    }
-    button {
-      padding: 8px 16px;
-      margin-left: 10px;
-      font-size: 1rem;
-      background: #0066cc;
-      color: white;
-      border: none;
-      border-radius: 4px;
+    #cheats button {
+      margin: 0 10px;
+      padding: 6px 12px;
+      font-size: 14px;
       cursor: pointer;
     }
-    button:hover {
-      background: #005bb5;
+    #gameContainer {
+      position: relative;
+      width: 800px;
+      height: 600px;
+      border: 2px solid #444;
+      background: #000;
     }
-    #feedback {
-      margin-top: 20px;
-      font-weight: bold;
+    #gameCanvas {
+      display: block;
+      background: #000;
     }
-    .footer {
-      text-align: center;
-      color: #777;
-      margin: 20px 0;
-      font-size: 0.9rem;
+    #powerUpDesc {
+      width: 800px;
+      padding: 6px 10px;
+      background: #222;
+      border: 2px solid #444;
+      box-sizing: border-box;
+      font-family: "Courier New", monospace;
+      color: #0f0;
+      font-size: 14px;
+      min-height: 24px;
+      margin-top: 4px;
+      text-shadow: 1px 1px 0 #050;
+    }
+    #joysticksContainer {
+      width: 800px;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .joystick {
+      display: none;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid #888;
+      border-radius: 50%;
+      touch-action: none;
+      position: relative;
+    }
+    .knob {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: rgba(200, 200, 200, 0.8);
+      border: 2px solid #444;
+      border-radius: 50%;
+      transform: translate(-25px, -25px);
+      pointer-events: none;
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .sidebar::-webkit-scrollbar-track {
+      background: #222;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #0f0;
+    }
+    .sidebar::-webkit-scrollbar-thumb:hover {
+      background: #0c0;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Guess a Number</h1>
-  </header>
-
-  <div class="game-container">
-    <p>I'm thinking of a number between 1 and 20.</p>
-    <div>
-      <input type="number" id="guessInput" min="1" max="20" />
-      <button id="submitGuess">Guess</button>
+  <div id="wrapper">
+    <div id="leftSidebar" class="sidebar">
+      <h3>Roger Levels</h3>
+      <div id="rogerCurrent" class="currentScore"></div>
+      <ul id="rogerLevels"></ul>
     </div>
-    <div id="feedback"></div>
-  </div>
-
-  <div class="footer">
-    <a href="index.html">Back to Home</a>
+    <div id="centerArea">
+      <div id="cheats">
+        <button data-level="1">Cheat: Level 1</button>
+        <button data-level="2">Cheat: Level 2</button>
+        <button data-level="3">Cheat: Level 3</button>
+      </div>
+      <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+      </div>
+      <div id="joysticksContainer">
+        <div id="joystickLeft" class="joystick"><div class="knob"></div></div>
+        <div id="joystickRight" class="joystick"><div class="knob"></div></div>
+      </div>
+      <div id="powerUpDesc"></div>
+    </div>
+    <div id="rightSidebar" class="sidebar">
+      <h3>Chloe Levels</h3>
+      <div id="chloeCurrent" class="currentScore"></div>
+      <ul id="chloeLevels"></ul>
+    </div>
   </div>
 
   <script>
-    (function() {
-      const target = Math.floor(Math.random() * 20) + 1;
-      const feedbackEl = document.getElementById('feedback');
-      const guessInput = document.getElementById('guessInput');
-      const submitBtn = document.getElementById('submitGuess');
+    window.onload = () => {
+      const canvas        = document.getElementById("gameCanvas");
+      const ctx           = canvas.getContext("2d");
+      const W             = canvas.width;
+      const H             = canvas.height;
 
-      submitBtn.addEventListener('click', () => {
-        const guess = parseInt(guessInput.value, 10);
-        if (isNaN(guess) || guess < 1 || guess > 20) {
-          feedbackEl.textContent = 'Please enter a number between 1 and 20.';
-          return;
+      const leftList      = document.getElementById("rogerLevels");
+      const rightList     = document.getElementById("chloeLevels");
+      const rogerCurrent  = document.getElementById("rogerCurrent");
+      const chloeCurrent  = document.getElementById("chloeCurrent");
+      const powerUpDescDiv = document.getElementById("powerUpDesc");
+      const cheatsDiv     = document.getElementById("cheats");
+
+      let stage        = "level1"; // "level1", "level2", "level3"
+      let gamePaused   = false;
+
+      let phase1Logged = false;
+      let phase2Logged = false;
+      let phase3Logged = false;
+
+      const GRAVITY             = 0.5;
+      const BOUNCE_VEL          = -12;
+      const DOUBLE_BOUNCE_BOOST = -8;
+      const FLY_SPEED           = 4;
+      const GROUND_Y            = H;
+
+      const trampolines = [
+        { x: 80,  y: H - 60,  width: 300, height: 20, color: "#664400", vx: 1 },
+        { x: 240, y: H - 180, width: 200, height: 15, color: "#664400", vx: 1.5 },
+        { x: 400, y: H - 280, width: 240, height: 15, color: "#664400", vx: 2 },
+      ];
+
+      const keys = {
+        ArrowLeft:  false,
+        ArrowRight: false,
+        ArrowUp:    false,
+        ArrowDown:  false,
+        KeyA:       false,
+        KeyD:       false,
+        KeyW:       false,
+        KeyS:       false,
+      };
+
+      let pinwheelAngle    = 0;
+      let holdHands        = false;
+      let holdHandsItem    = null;
+      let handSpacing      = 0;
+      let messageText      = "";
+      let messageTimer     = 0;
+
+      let megaSpeedActive   = false;
+      let megaSpeedTimer    = 0;
+
+      let flyingMode       = false;
+      let tetherActive     = false;
+      let tetherTimer      = 0;
+
+      let slowCandyActive  = false;
+      let slowCandyTimer   = 0;
+
+      let candyHurricaneActive = false;
+      let hurricaneTimer       = 0;
+      let hurricaneCandyCount  = 0;
+
+      let bringHands        = false;
+      let bringHandsTimer   = 0;
+      const bringHandsDuration = 60; // frames
+      let rogerStartX, rogerStartY, chloeStartX, chloeStartY;
+      let rogerDX, rogerDY, chloeDX, chloeDY;
+
+      const clouds         = [];
+      const birds          = [];
+      const planes         = [];
+      const flyingItems    = [];
+      const flyingPowerUps = [];
+      const flameRings     = [];
+
+      const phase2Items    = [];
+
+      let rainbowActive    = false;
+      let rainbowTimer     = 0;
+      let hazeActive       = false;
+      let hazeTimer        = 0;
+      let turboActive      = false;
+      let turboTimer       = 0;
+
+      // LEVEL 3 entities
+      const jellyfishes    = [];
+      const octopuses      = [];
+      const seaweeds       = [];
+      const fishes         = [];
+      const crabs          = [];
+      const treasures      = [];
+      const goldCoins      = [];
+      const bubbles        = [];
+      const enemySharks    = [];
+      const crocodiles     = [];
+      let level3ScoreRoger = 0;
+      let level3ScoreChloe = 0;
+      let bigSharkMode     = false;
+
+      // Boat & worm position
+      const boatY    = 20;
+      const boatW    = 120;
+      const boatH    = 20;
+      const wormX    = W / 2;
+      const wormY    = 60;
+
+      // Pre‐written descriptions for each power‐up
+      const powerUpDescriptions = {
+        holdHands:        "HOLD HANDS: Pause, float to center side-by-side, then earn candy points together.",
+        stopHoldingHands: "STOP HANDS: Release from hold-hands mode.",
+        megaSpeed:        "MEGA SPEED: Double speed for 10s.",
+        slowCandy:        "SLOW CANDY: All candies fall 50% slower for 10s.",
+        candyHurricane:   "CANDY HURRICANE: 100 candies over 30s!",
+        tether:           "TETHER: Bind both players & share points for 10s.",
+        rainbowBoost:     "RAINBOW BOOST: 1.5× flying speed & double points for 10s.",
+        babyShark:        "BABY SHARK: Transform into a big shark that chomps fish!",
+        treasure:         "TREASURE: Box floats & emits bubbles → gold coins scatter!",
+        goldCoin:         "GOLD COIN: Collect for points!",
+        enemyShark:       "Watch out: Enemy Shark!",
+        crocodile:        "Beware: Crocodile!"
+      };
+
+      class Character {
+        constructor(name, color, startX, controls) {
+          this.name         = name;
+          this.baseColor    = color;
+          this.width        = 40;
+          this.height       = 60;
+          this.x            = startX;
+          this.y            = H - this.height;
+          this.vx           = 0;
+          this.vy           = 0;
+          this.scoreCandy   = 0;
+          this.scoreFlying  = 0;
+          this.controls     = controls;
+          this.sharkScale   = 1;
+          this.sharkBaseW   = 80;
+          this.sharkBaseH   = 40;
+          this.invincible   = 0; // frames of invincibility after enemy hit
         }
-        if (guess === target) {
-          feedbackEl.textContent = '🎉 Correct! You guessed it.';
-        } else if (guess < target) {
-          feedbackEl.textContent = 'Too low. Try again!';
-        } else {
-          feedbackEl.textContent = 'Too high. Try again!';
+        update(other, joystick) {
+          if (stage !== "level1" || holdHands || bringHands) return;
+          let speed = 12;
+          if (megaSpeedActive) speed *= 2;
+          let moveX = 0, wantJump = false;
+          if (joystick) {
+            moveX = joystick.dx * speed;
+            if (joystick.dy < -0.5 && this.y + this.height >= GROUND_Y) wantJump = true;
+          } else {
+            if (keys[this.controls.left])      moveX = -speed;
+            else if (keys[this.controls.right]) moveX = speed;
+            if (keys[this.controls.up] && this.y + this.height >= GROUND_Y) wantJump = true;
+          }
+          this.vx = moveX;
+          this.x  += this.vx;
+          if (wantJump) {
+            this.vy = BOUNCE_VEL;
+            this.y  = GROUND_Y - this.height;
+          }
+          this.vy += GRAVITY;
+          this.y  += this.vy;
+          if (this.x < 0) this.x = 0;
+          if (this.x + this.width > W) this.x = W - this.width;
+          if (this.y + this.height > GROUND_Y) {
+            this.y  = GROUND_Y - this.height;
+            this.vy = 0;
+          }
+          if (this.y < 0) {
+            this.y  = 0;
+            this.vy = 0;
+          }
+          for (const t of trampolines) {
+            if (
+              this.vy > 0 &&
+              this.y + this.height >= t.y &&
+              this.y + this.height - this.vy <= t.y &&
+              this.x + this.width > t.x &&
+              this.x < t.x + t.width
+            ) {
+              this.vy = BOUNCE_VEL;
+              this.y  = t.y - this.height;
+              if (other.y + other.height < t.y && other.vy < 0) {
+                other.vy += DOUBLE_BOUNCE_BOOST;
+              }
+            }
+          }
+        }
+        draw() {
+          if (stage === "level2") {
+            const cx = this.x + this.width / 2;
+            const cy = this.y + this.height / 2;
+            const bodyW = this.width;
+            const bodyH = this.height * 0.6;
+            ctx.fillStyle = this.baseColor;
+            ctx.fillRect(cx - bodyW/2, cy - bodyH/2, bodyW, bodyH);
+            ctx.fillRect(cx + bodyW/2 - 5, cy - 5, bodyW/2, 10);
+            ctx.save();
+            ctx.translate(cx, cy - bodyH/2 - 10);
+            ctx.rotate(pinwheelAngle * 2);
+            ctx.fillStyle = "#888";
+            ctx.fillRect(-bodyW, -5, bodyW*2, 10);
+            ctx.restore();
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(cx - bodyW/6, cy - bodyH/6, bodyW/3, bodyH/3);
+          }
+          else if (stage === "level3" && !bigSharkMode) {
+            const x = this.x, y = this.y;
+            ctx.fillStyle = this.baseColor;
+            ctx.fillRect(x, y + this.height/3, this.width, this.height*2/3);
+            ctx.fillStyle = "#000";
+            ctx.fillRect(x + this.width/4, y, this.width/2, this.height/3);
+            ctx.fillStyle = "#00f";
+            ctx.fillRect(x + this.width/3, y + this.height/12, this.width/3, this.height/6);
+            ctx.fillStyle = "#555";
+            ctx.beginPath();
+            ctx.moveTo(x, y + this.height);
+            ctx.lineTo(x - 10, y + this.height + 20);
+            ctx.lineTo(x + this.width/2, y + this.height);
+            ctx.closePath();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x + this.width, y + this.height);
+            ctx.lineTo(x + this.width + 10, y + this.height + 20);
+            ctx.lineTo(x + this.width/2, y + this.height);
+            ctx.closePath();
+            ctx.fill();
+          }
+          else if (bigSharkMode) {
+            const w = this.sharkBaseW * this.sharkScale;
+            const h = this.sharkBaseH * this.sharkScale;
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.fillStyle = this.baseColor;
+            ctx.beginPath();
+            ctx.moveTo(0, h / 2);
+            ctx.quadraticCurveTo(w / 2, -h / 4, w, h / 2);
+            ctx.quadraticCurveTo(w / 2, h + h / 4, 0, h / 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(0, h / 2);
+            ctx.lineTo(-w * 0.2, h * 0.2);
+            ctx.lineTo(-w * 0.2, h * 0.7);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.arc(w * 0.75, h * 0.3, 5 * this.sharkScale, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(w * 0.75, h * 0.3, 2 * this.sharkScale, 0, 2 * Math.PI);
+            ctx.fill();
+            const mouthOffset = (Math.sin(frameCount * 0.4) + 1) / 2 * (h * 0.1);
+            const y1 = h * 0.6 - mouthOffset / 2;
+            const y2 = h * 0.6 + mouthOffset / 2;
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.moveTo(w * 0.4, y1);
+            ctx.lineTo(w * 0.8, y1);
+            ctx.lineTo(w * 0.8, y2);
+            ctx.lineTo(w * 0.4, y2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth   = 2;
+            ctx.stroke();
+            ctx.restore();
+          }
+          else {
+            let fillStyle   = this.baseColor;
+            let strokeStyle = null;
+            if (this.scoreCandy >= 10) {
+              const grad = ctx.createLinearGradient(
+                this.x, this.y, this.x, this.y + this.height
+              );
+              grad.addColorStop(0, "red");
+              grad.addColorStop(0.17, "orange");
+              grad.addColorStop(0.34, "yellow");
+              grad.addColorStop(0.51, "green");
+              grad.addColorStop(0.68, "blue");
+              grad.addColorStop(0.85, "indigo");
+              grad.addColorStop(1, "violet");
+              fillStyle   = grad;
+              strokeStyle = this.name === "Roger" ? "#0000ff" : "#ff1493";
+            }
+            ctx.fillStyle   = fillStyle;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+            if (strokeStyle) {
+              ctx.lineWidth   = 4;
+              ctx.strokeStyle = strokeStyle;
+              ctx.strokeRect(this.x, this.y, this.width, this.height);
+            }
+            const eyeW = this.width * 0.2;
+            const eyeH = this.height * 0.13;
+            const eyeY = this.y + this.height * 0.2;
+            const eyeX1 = this.x + this.width * 0.15;
+            const eyeX2 = this.x + this.width * 0.65;
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(eyeX1, eyeY, eyeW, eyeH);
+            ctx.fillRect(eyeX2, eyeY, eyeW, eyeH);
+
+            let mouthW = this.width * 0.6;
+            let mouthH = this.height * 0.08;
+            if (holdHands) {
+              mouthW = this.width * 0.8;
+              mouthH = this.height * 0.2;
+            }
+            const mouthX = this.x + (this.width - mouthW) / 2;
+            const mouthY = this.y + this.height * 0.6;
+            ctx.fillStyle = "#000";
+            ctx.fillRect(mouthX, mouthY, mouthW, mouthH);
+
+            if (this.scoreCandy >= 15) {
+              const centerX = this.x + this.width / 2;
+              const centerY = this.y;
+              const radius  = this.width / 2;
+              ctx.beginPath();
+              ctx.fillStyle   = "#fff";
+              ctx.strokeStyle = "#000";
+              ctx.lineWidth   = 2;
+              ctx.arc(centerX, centerY, radius, Math.PI, 0);
+              ctx.fill();
+              ctx.stroke();
+
+              const pinColor = (this.scoreCandy >= 20) ? "gold" : "red";
+              ctx.save();
+              ctx.translate(centerX, centerY - radius * 0.5);
+              ctx.rotate(pinwheelAngle);
+              ctx.strokeStyle = pinColor;
+              ctx.lineWidth   = 4;
+              const armLen    = radius * 0.8;
+              ctx.beginPath();
+              ctx.moveTo(-armLen, -armLen);
+              ctx.lineTo(armLen, armLen);
+              ctx.moveTo(-armLen, armLen);
+              ctx.lineTo(armLen, -armLen);
+              ctx.stroke();
+              ctx.restore();
+            }
+          }
+        }
+      }
+
+      class SpecialItem {
+        constructor(type) {
+          this.type   = type;
+          this.width  = 100;
+          this.height = 40;
+          this.x      = Math.random() * (W - this.width);
+          this.y      = -40;
+          this.vy     = 1;
+        }
+        update() {
+          if (stage === "level1" && !bringHands && !gamePaused) this.y += this.vy;
+        }
+        draw() {
+          let wrapperColor;
+          switch (this.type) {
+            case "holdHands":        wrapperColor = "#FF69B4"; break;
+            case "stopHoldingHands": wrapperColor = "#888888"; break;
+            case "megaSpeed":        wrapperColor = "#FFD700"; break;
+            case "slowCandy":        wrapperColor = "#00CED1"; break;
+            case "candyHurricane":   wrapperColor = "#DC143C"; break;
+            case "babyShark":        wrapperColor = "#1E90FF"; break;
+            default:                 wrapperColor = "#D2691E";
+          }
+          ctx.fillStyle = wrapperColor;
+          ctx.fillRect(this.x, this.y, this.width, this.height);
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth   = 2;
+          ctx.strokeRect(this.x, this.y, this.width, this.height);
+          ctx.fillStyle = "rgba(255,255,255,0.3)";
+          for (let i = 10; i < this.width; i += 20) {
+            ctx.fillRect(this.x + i, this.y, 10, this.height);
+          }
+          ctx.fillStyle = "#000";
+          ctx.font          = "12px Courier New, monospace";
+          ctx.textAlign     = "center";
+          ctx.textBaseline  = "middle";
+          let lines = [];
+          switch (this.type) {
+            case "holdHands":        lines = ["HOLD HANDS"]; break;
+            case "stopHoldingHands": lines = ["STOP HANDS"]; break;
+            case "megaSpeed":        lines = ["MEGA SPEED"]; break;
+            case "slowCandy":        lines = ["SLOW", "CANDY"]; break;
+            case "candyHurricane":   lines = ["CANDY", "HURRICANE"]; break;
+            case "babyShark":        lines = ["BABY", "SHARK"]; break;
+          }
+          const lineHeight = 14;
+          const startY     = this.y + (this.height - lines.length * lineHeight) / 2 + lineHeight / 2;
+          for (let i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], this.x + this.width / 2, startY + i * lineHeight);
+          }
+        }
+        checkCatch(character) {
+          return (
+            this.x < character.x + character.width &&
+            this.x + this.width > character.x &&
+            this.y < character.y + character.height &&
+            this.y + this.height > character.y
+          );
+        }
+      }
+
+      class Candy {
+        constructor() {
+          this.radius = 10;
+          this.x      = Math.random() * (W - this.radius * 2) + this.radius;
+          this.y      = -20;
+          this.vy     = (3 + Math.random() * 2) * (slowCandyActive ? 0.5 : 1);
+          const r = Math.random();
+          if (r < 0.5) {
+            this.type  = "regular";
+            this.color = "#ff69b4";
+          } else if (r < 0.8) {
+            this.type  = "lollipop";
+            this.color = "#ffa500";
+          } else {
+            this.type  = "chocolate";
+            this.color = "#8B4513";
+          }
+        }
+        update() {
+          if (stage === "level1" && !bringHands && !gamePaused) {
+            this.y += this.vy;
+          }
+        }
+        draw() {
+          if (this.type === "regular") {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(this.x - this.radius / 2, this.y - 2, this.radius, 4);
+          } else if (this.type === "lollipop") {
+            const stickH = 20;
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(this.x - 2, this.y, 4, stickH);
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth   = 2;
+            ctx.beginPath();
+            ctx.moveTo(this.x - this.radius / 2, this.y);
+            ctx.lineTo(this.x + this.radius / 2, this.y);
+            ctx.moveTo(this.x, this.y - this.radius / 2);
+            ctx.lineTo(this.x, this.y + this.radius / 2);
+            ctx.stroke();
+          } else if (this.type === "chocolate") {
+            const w = 20, h = 12;
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x - w / 2, this.y - h / 2, w, h);
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth   = 1;
+            ctx.beginPath();
+            ctx.moveTo(this.x - w / 2 + 5, this.y - h / 2);
+            ctx.lineTo(this.x - w / 2 + 5, this.y + h / 2);
+            ctx.moveTo(this.x + w / 2 - 5, this.y - h / 2);
+            ctx.lineTo(this.x + w / 2 - 5, this.y + h / 2);
+            ctx.moveTo(this.x - w / 2, this.y);
+            ctx.lineTo(this.x + w / 2, this.y);
+            ctx.stroke();
+          }
+        }
+        checkCatch(character) {
+          const dx   = this.x - (character.x + character.width / 2);
+          const dy   = this.y - (character.y + character.height / 2);
+          const dist = Math.hypot(dx, dy);
+          return dist < this.radius + Math.max(character.width, character.height) / 2;
+        }
+      }
+
+      class FlyingItem {
+        constructor(type) {
+          this.type   = type;
+          this.radius = 20;
+          this.x      = Math.random() * (W - this.radius * 2) + this.radius;
+          this.y      = H + this.radius;
+          this.vy     = (1 + Math.random() * 1.5) * -1;
+          this.vx     = 0;
+        }
+        update() {
+          if (stage === "level2" && !gamePaused) {
+            this.y += this.vy;
+            this.x += this.vx;
+          }
+        }
+        draw() {
+          if (this.type === "fairy") {
+            const cx = this.x;
+            const cy = this.y;
+            const r = this.radius;
+            ctx.fillStyle = "#FFD700";
+            ctx.beginPath();
+            ctx.arc(cx, cy, r * 0.3, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "rgba(255,255,255,0.7)";
+            ctx.beginPath();
+            ctx.ellipse(cx - r * 0.4, cy, r * 0.4, r * 0.2, Math.PI / 4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(cx + r * 0.4, cy, r * 0.4, r * 0.2, -Math.PI / 4, 0, 2 * Math.PI);
+            ctx.fill();
+          } else if (this.type === "unicorn") {
+            const cx = this.x;
+            const cy = this.y;
+            ctx.fillStyle = "#FFFFFF";
+            ctx.beginPath();
+            ctx.arc(cx, cy, this.radius, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "#FFD700";
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - this.radius);
+            ctx.lineTo(cx - 5, cy - this.radius - 20);
+            ctx.lineTo(cx + 5, cy - this.radius - 20);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(cx + this.radius * 0.3, cy - this.radius * 0.2, 3, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "#FF69B4";
+            ctx.beginPath();
+            ctx.moveTo(cx - this.radius * 0.5, cy - this.radius * 0.2);
+            ctx.quadraticCurveTo(cx - this.radius * 0.6, cy - this.radius * 0.8, cx, cy - this.radius * 0.5);
+            ctx.fill();
+          } else if (this.type === "icecream") {
+            ctx.fillStyle = "#DEB887";
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y + this.radius);
+            ctx.lineTo(this.x - this.radius / 2, this.y - this.radius / 2);
+            ctx.lineTo(this.x + this.radius / 2, this.y - this.radius / 2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = "#FFC0CB";
+            ctx.beginPath();
+            ctx.arc(this.x, this.y - this.radius / 2, this.radius, Math.PI, 0);
+            ctx.fill();
+          }
+        }
+        checkCatch(character) {
+          const dx   = this.x - (character.x + character.width / 2);
+          const dy   = this.y - (character.y + character.height / 2);
+          const dist = Math.hypot(dx, dy);
+          return dist < this.radius + Math.max(character.width, character.height) / 2;
+        }
+      }
+
+      class Phase2Collectible {
+        constructor(type) {
+          this.type   = type;
+          this.radius = 20;
+          const speed  = 2;
+          const side   = Math.floor(Math.random() * 4);
+          let angle;
+          if (side === 0) {
+            this.x = Math.random() * (W - this.radius * 2) + this.radius;
+            this.y = -this.radius;
+            angle = Math.random() * Math.PI * 0.5 + Math.PI * 0.25;
+          } else if (side === 1) {
+            this.x = Math.random() * (W - this.radius * 2) + this.radius;
+            this.y = H + this.radius;
+            angle = Math.random() * Math.PI * 0.5 + Math.PI * 1.25;
+          } else if (side === 2) {
+            this.x = -this.radius;
+            this.y = Math.random() * (H - this.radius * 2) + this.radius;
+            angle = Math.random() * Math.PI * 0.5 - Math.PI * 0.25;
+          } else {
+            this.x = W + this.radius;
+            this.y = Math.random() * (H - this.radius * 2) + this.radius;
+            angle = Math.random() * Math.PI * 0.5 + Math.PI * 0.75;
+          }
+          this.vx = speed * Math.cos(angle);
+          this.vy = speed * Math.sin(angle);
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x - this.radius <= 0) {
+            this.x = this.radius;
+            this.vx = -this.vx;
+          }
+          if (this.x + this.radius >= W) {
+            this.x = W - this.radius;
+            this.vx = -this.vx;
+          }
+          if (this.y - this.radius <= 0) {
+            this.y = this.radius;
+            this.vy = -this.vy;
+          }
+          if (this.y + this.radius >= H) {
+            this.y = H - this.radius;
+            this.vy = -this.vy;
+          }
+        }
+        draw() {
+          if (this.type === "fairy") {
+            const cx = this.x, cy = this.y, r = this.radius;
+            ctx.fillStyle = "#FFD700";
+            ctx.beginPath();
+            ctx.arc(cx, cy, r * 0.3, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "rgba(255,255,255,0.7)";
+            ctx.beginPath();
+            ctx.ellipse(cx - r * 0.4, cy, r * 0.4, r * 0.2, Math.PI / 4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(cx + r * 0.4, cy, r * 0.4, r * 0.2, -Math.PI / 4, 0, 2 * Math.PI);
+            ctx.fill();
+          } else if (this.type === "unicorn") {
+            const cx = this.x, cy = this.y;
+            ctx.fillStyle = "#FFFFFF";
+            ctx.beginPath();
+            ctx.arc(cx, cy, this.radius, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "#FFD700";
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - this.radius);
+            ctx.lineTo(cx - 5, cy - this.radius - 20);
+            ctx.lineTo(cx + 5, cy - this.radius - 20);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(cx + this.radius * 0.3, cy - this.radius * 0.2, 3, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = "#FF69B4";
+            ctx.beginPath();
+            ctx.moveTo(cx - this.radius * 0.5, cy - this.radius * 0.2);
+            ctx.quadraticCurveTo(cx - this.radius * 0.6, cy - this.radius * 0.8, cx, cy - this.radius * 0.5);
+            ctx.fill();
+          }
+        }
+        checkCatch(character) {
+          const dx   = this.x - (character.x + character.width / 2);
+          const dy   = this.y - (character.y + character.height / 2);
+          const dist = Math.hypot(dx, dy);
+          return dist < this.radius + Math.max(character.width, character.height) / 2;
+        }
+      }
+
+      class FlyingPowerUp {
+        constructor(type) {
+          this.type   = type;
+          this.radius = 30;
+          this.x      = Math.random() * (W - this.radius * 2) + this.radius;
+          this.y      = H + this.radius;
+          this.vy     = -1.5;
+        }
+        update() {
+          if (stage === "level2" && !gamePaused) this.y += this.vy;
+        }
+        draw() {
+          ctx.lineWidth = 3;
+          switch (this.type) {
+            case "rainbowBoost":
+              {
+                const grad = ctx.createRadialGradient(this.x, this.y, 5, this.x, this.y, this.radius);
+                grad.addColorStop(0, "red");
+                grad.addColorStop(0.17, "orange");
+                grad.addColorStop(0.34, "yellow");
+                grad.addColorStop(0.51, "green");
+                grad.addColorStop(0.68, "blue");
+                grad.addColorStop(0.85, "indigo");
+                grad.addColorStop(1, "violet");
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.strokeStyle = "#000";
+                ctx.stroke();
+              }
+              break;
+            case "tether":
+              {
+                ctx.fillStyle = "#ADFF2F";
+                ctx.fillRect(this.x - this.radius, this.y - this.radius / 2, this.radius * 2, this.radius);
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth   = 2;
+                ctx.strokeRect(this.x - this.radius, this.y - this.radius / 2, this.radius * 2, this.radius);
+                ctx.fillStyle    = "#000";
+                ctx.font         = "14px Courier New, monospace";
+                ctx.textAlign    = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("TETHER", this.x, this.y);
+              }
+              break;
+          }
+        }
+        checkCatch(character) {
+          const dx = this.x - (character.x + character.width / 2);
+          const dy = this.y - (character.y + character.height / 2);
+          const dist = Math.hypot(dx, dy);
+          return dist < this.radius + Math.max(character.width, character.height) / 2;
+        }
+      }
+
+      class FlameRing {
+        constructor(x, y) {
+          this.x      = x;
+          this.y      = y;
+          this.radius = 0;
+          this.maxR   = 100;
+          this.life   = 30;
+        }
+        update() {
+          if (this.life > 0) {
+            this.radius += this.maxR / 30;
+            this.life--;
+          }
+        }
+        draw() {
+          if (this.life > 0) {
+            ctx.strokeStyle = "rgba(255,69,0, " + (this.life / 30) + ")";
+            ctx.lineWidth   = 4;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+            ctx.stroke();
+          }
+        }
+      }
+
+      class Cloud {
+        constructor() {
+          this.x = Math.random() * W;
+          this.y = Math.random() * H * 0.5;
+          this.vx = 0.5 + Math.random();
+          this.width = 100 + Math.random() * 80;
+          this.height = 40 + Math.random() * 20;
+        }
+        update() {
+          this.x += this.vx;
+          if (this.x - this.width > W) {
+            this.x = -this.width;
+            this.y = Math.random() * H * 0.5;
+          }
+        }
+        draw() {
+          ctx.fillStyle = "#FFFFFF";
+          ctx.beginPath();
+          ctx.ellipse(this.x, this.y, this.width, this.height, 0, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      }
+
+      class Bird {
+        constructor() {
+          this.x = Math.random() * W;
+          this.y = Math.random() * H * 0.5;
+          this.vx = 2 + Math.random() * 2;
+          this.size = 10 + Math.random() * 5;
+        }
+        update() {
+          this.x += this.vx;
+          if (this.x - this.size > W) {
+            this.x = -this.size;
+            this.y = Math.random() * H * 0.5;
+          }
+        }
+        draw() {
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth   = 2;
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.lineTo(this.x - this.size, this.y + this.size / 2);
+          ctx.lineTo(this.x - this.size * 2, this.y);
+          ctx.stroke();
+        }
+      }
+
+      class Plane {
+        constructor() {
+          this.x = Math.random() * W;
+          this.y = Math.random() * H * 0.5;
+          this.vx = 3 + Math.random() * 2;
+          this.width = 60;
+          this.height = 20;
+        }
+        update() {
+          this.x += this.vx;
+          if (this.x - this.width > W) {
+            this.x = -this.width;
+            this.y = Math.random() * H * 0.5;
+          }
+        }
+        draw() {
+          ctx.fillStyle = "#808080";
+          ctx.fillRect(this.x, this.y, this.width, this.height);
+          ctx.fillStyle = "#000";
+          ctx.fillRect(this.x + this.width - 10, this.y + 5, 10, 10);
+        }
+      }
+
+      // LEVEL 3 ENTITIES
+      class Seaweed {
+        constructor(x, baseY) {
+          this.x = x;
+          this.baseY = baseY;
+          this.height = 100 + Math.random() * 50;
+          this.phase = Math.random() * Math.PI * 2;
+        }
+        draw() {
+          this.phase += 0.02;
+          const sway = Math.sin(this.phase) * 10;
+          ctx.fillStyle = "#2E8B57";
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.baseY);
+          ctx.quadraticCurveTo(this.x + sway, this.baseY - this.height/2, this.x, this.baseY - this.height);
+          ctx.quadraticCurveTo(this.x - sway, this.baseY - this.height/2, this.x, this.baseY);
+          ctx.fill();
+        }
+      }
+
+      class Fish {
+        constructor() {
+          this.x = Math.random() * W;
+          this.y = Math.random() * (H * 0.7) + 50;
+          this.vx = Math.random() * 2 + 1;
+          this.size = 20 + Math.random() * 10;
+          const possibleColors = ["#FF4500","#FFD700","#ADFF2F","#FF69B4","#FFFFFF","#8A2BE2"];
+          this.color = possibleColors[Math.floor(Math.random()*possibleColors.length)];
+          this.nibbleTimer = 0;
+        }
+        update() {
+          if (this.nibbleTimer > 0) {
+            this.nibbleTimer--;
+            return;
+          }
+          // If near worm, nibble
+          if (Math.abs(this.x - wormX) < this.size && Math.abs(this.y - wormY) < this.size) {
+            this.nibbleTimer = 60;
+            return;
+          }
+          this.x += this.vx;
+          if (this.x - this.size > W) {
+            this.x = -this.size;
+            this.y = Math.random() * (H * 0.7) + 50;
+          }
+        }
+        draw() {
+          const cx = this.x;
+          const cy = this.y;
+          const r = this.size;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.ellipse(cx, cy, r, r / 2, 0, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(cx - r, cy);
+          ctx.lineTo(cx - r - r/2, cy - r/3);
+          ctx.lineTo(cx - r - r/2, cy + r/3);
+          ctx.closePath();
+          ctx.fill();
+          ctx.fillStyle = "#000";
+          ctx.beginPath();
+          ctx.arc(cx + r/3, cy - r/8, r/8, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+        checkCatch(character) {
+          const fx = this.x;
+          const fy = this.y;
+          const cx = character.x + character.width/2;
+          const cy = character.y + character.height/2;
+          const dist = Math.hypot(fx - cx, fy - cy);
+          return dist < this.size + Math.max(character.width, character.height)/2;
+        }
+      }
+
+      class Crab {
+        constructor() {
+          this.x = Math.random() * W;
+          this.y = H - 30;
+          this.vx = Math.random() * 1 + 0.5;
+          this.size = 20;
+          this.phase = 0;
+        }
+        update() {
+          this.x += this.vx;
+          if (this.x - this.size > W) {
+            this.x = -this.size;
+          }
+          this.phase += 0.1;
+        }
+        draw() {
+          ctx.fillStyle = "#B22222";
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, Math.PI, 2*Math.PI);
+          ctx.fill();
+          ctx.strokeStyle = "#B22222";
+          ctx.lineWidth   = 3;
+          for (let i = -2; i <= 2; i++) {
+            const legY = this.y + Math.sin(this.phase + i)*5;
+            ctx.beginPath();
+            ctx.moveTo(this.x + i*5, this.y);
+            ctx.lineTo(this.x + i*7, legY);
+            ctx.stroke();
+          }
+        }
+        checkCatch(character) {
+          const cx = character.x + character.width/2;
+          const cy = character.y + character.height/2;
+          const dist = Math.hypot(this.x - cx, this.y - cy);
+          return dist < this.size + Math.max(character.width, character.height)/2;
+        }
+      }
+
+      class Treasure {
+        constructor() {
+          this.radius = 20;
+          this.x      = Math.random() * (W - this.radius*2) + this.radius;
+          this.baseY  = H - 80;
+          this.y      = this.baseY;
+          this.phase  = Math.random() * Math.PI * 2;
+        }
+        update() {
+          this.phase += 0.03;
+          this.y = this.baseY + Math.sin(this.phase) * 5;
+          if (Math.random() < 0.01) {
+            bubbles.push(new Bubble(this.x, this.y - this.radius - 10));
+          }
+        }
+        draw() {
+          ctx.fillStyle = "#DAA520";
+          ctx.fillRect(this.x - this.radius, this.y - this.radius/2, this.radius*2, this.radius);
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth   = 2;
+          ctx.strokeRect(this.x - this.radius, this.y - this.radius/2, this.radius*2, this.radius);
+          ctx.beginPath();
+          ctx.moveTo(this.x - this.radius + 5, this.y - this.radius/2 + 5);
+          ctx.lineTo(this.x + this.radius - 5, this.y - this.radius/2 + 5);
+          ctx.moveTo(this.x - this.radius + 5, this.y + this.radius/2 - 5);
+          ctx.lineTo(this.x + this.radius - 5, this.y + this.radius/2 - 5);
+          ctx.stroke();
+        }
+        checkCatchByPlayer(character) {
+          const cx = character.x + character.width/2;
+          const cy = character.y + character.height/2;
+          return (
+            this.x - this.radius < cx &&
+            this.x + this.radius > cx &&
+            this.y - this.radius/2 < cy &&
+            this.y + this.radius/2 > cy
+          );
+        }
+        checkCatchByCrab(crab) {
+          const cx = crab.x;
+          const cy = crab.y;
+          return (
+            this.x - this.radius < cx + crab.size &&
+            this.x + this.radius > cx - crab.size &&
+            this.y - this.radius/2 < cy + crab.size &&
+            this.y + this.radius/2 > cy - crab.size
+          );
+        }
+      }
+
+      class GoldCoin {
+        constructor(x, y) {
+          this.x      = x;
+          this.y      = y;
+          const angle = Math.random() * 2 * Math.PI;
+          const speed = 5 + Math.random() * 3;
+          this.vx     = Math.cos(angle) * speed;
+          this.vy     = -Math.sin(angle) * speed;
+          this.radius = 5;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vy += 0.2; // gravity pull
+        }
+        draw() {
+          ctx.fillStyle = "gold";
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+        checkCatchByCrab(crab) {
+          const dx   = this.x - crab.x;
+          const dy   = this.y - crab.y;
+          const dist = Math.hypot(dx, dy);
+          return dist < this.radius + crab.size;
+        }
+        checkCatchByPlayer(character) {
+          const cx = character.x + character.width/2;
+          const cy = character.y + character.height/2;
+          const dist = Math.hypot(this.x - cx, this.y - cy);
+          return dist < this.radius + Math.max(character.width, character.height)/2;
+        }
+      }
+
+      class Jellyfish {
+        constructor() {
+          this.x     = Math.random() * (W - 50) + 25;
+          this.baseY = Math.random() * (H * 0.5) + 50;
+          this.phase = Math.random() * Math.PI * 2;
+          this.size  = 20 + Math.random() * 10;
+          this.y     = this.baseY;
+        }
+        update() {
+          this.phase += 0.02;
+          this.y = this.baseY + Math.sin(this.phase) * 20;
+        }
+        draw() {
+          const x = this.x, y = this.y, r = this.size;
+          ctx.fillStyle = "rgba(255,182,193,0.7)";
+          ctx.beginPath();
+          ctx.arc(x, y, r, Math.PI, 0);
+          ctx.quadraticCurveTo(x + r, y + r, x, y + r);
+          ctx.quadraticCurveTo(x - r, y + r, x - r, y);
+          ctx.closePath();
+          ctx.fill();
+          for (let i = -r; i <= r; i += r / 3) {
+            ctx.beginPath();
+            ctx.moveTo(x + i, y + r);
+            ctx.lineTo(x + i * 1.2, y + r + 10);
+            ctx.strokeStyle = "rgba(255,182,193,0.5)";
+            ctx.stroke();
+          }
+        }
+      }
+
+      class Octopus {
+        constructor() {
+          this.x     = Math.random() * (W - 40);
+          this.y     = H - 90;
+          this.vx    = (Math.random() < 0.5 ? 1 : -1) * (1 + Math.random());
+          this.size  = 20 + Math.random() * 10;
+          this.phase = 0;
+        }
+        update() {
+          this.x += this.vx;
+          if (this.x <= 0 || this.x + this.size * 2 >= W) this.vx *= -1;
+          this.phase += 0.1;
+        }
+        draw() {
+          const x = this.x, y = this.y, r = this.size;
+          ctx.fillStyle = "#800080";
+          ctx.beginPath();
+          ctx.arc(x + r, y, r, Math.PI, 0);
+          ctx.fill();
+          for (let i = 0; i < 5; i++) {
+            const legX = x + r + (i - 2) * (r / 2);
+            const legY = y;
+            const wave = Math.sin(this.phase + i) * 5;
+            ctx.beginPath();
+            ctx.moveTo(legX, legY);
+            ctx.quadraticCurveTo(legX, legY + r + wave, legX, legY + r * 2);
+            ctx.strokeStyle = "#800080";
+            ctx.lineWidth   = 3;
+            ctx.stroke();
+          }
+        }
+      }
+
+      class Bubble {
+        constructor(x, y) {
+          this.x = x + (Math.random() * 20 - 10);
+          this.y = y;
+          this.radius = 5 + Math.random() * 5;
+          this.vy = - (1 + Math.random() * 1);
+          this.life = 60 + Math.random() * 40;
+        }
+        update() {
+          this.y += this.vy;
+          this.life--;
+        }
+        draw() {
+          ctx.strokeStyle = "rgba(173,216,230," + (this.life/100) + ")";
+          ctx.lineWidth   = 2;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+          ctx.stroke();
+        }
+      }
+
+      class EnemyShark {
+        constructor() {
+          this.size = 40;
+          this.x    = -this.size;
+          this.y    = Math.random() * (H * 0.5) + 50;
+          this.vx   = 2 + Math.random() * 2;
+        }
+        update() {
+          this.x += this.vx;
+          if (this.x - this.size > W) {
+            this.x = -this.size;
+            this.y = Math.random() * (H * 0.5) + 50;
+            this.vx = 2 + Math.random() * 2;
+          }
+        }
+        draw() {
+          const w = this.size;
+          const h = this.size / 2;
+          ctx.fillStyle = "#444";
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y + h / 2);
+          ctx.quadraticCurveTo(this.x + w / 2, this.y - h / 4, this.x + w, this.y + h / 2);
+          ctx.quadraticCurveTo(this.x + w / 2, this.y + h + h / 4, this.x, this.y + h / 2);
+          ctx.fill();
+          ctx.fillStyle = "#fff";
+          ctx.beginPath();
+          ctx.arc(this.x + w * 0.6, this.y + h * 0.3, 5, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.fillStyle = "#000";
+          ctx.beginPath();
+          ctx.arc(this.x + w * 0.6, this.y + h * 0.3, 2, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+        checkBite(character) {
+          const fx = this.x + this.size / 2;
+          const fy = this.y + this.size / 4;
+          const cx = character.x + character.width/2;
+          const cy = character.y + character.height/2;
+          const dist = Math.hypot(fx - cx, fy - cy);
+          return dist < this.size/2 + Math.max(character.width, character.height)/2;
+        }
+      }
+
+      class Crocodile {
+        constructor() {
+          this.size = 50;
+          this.x    = Math.random() * (W - this.size);
+          this.y    = H - 50 - this.size/2;
+          this.vx   = (Math.random() < 0.5 ? 1 : -1) * (1 + Math.random());
+        }
+        update() {
+          this.x += this.vx;
+          if (this.x <= 0 || this.x + this.size >= W) this.vx *= -1;
+        }
+        draw() {
+          ctx.fillStyle = "#228B22";
+          ctx.fillRect(this.x, this.y, this.size, this.size/2);
+          ctx.fillStyle = "#556B2F";
+          ctx.fillRect(this.x + this.size/4, this.y - this.size/4, this.size/2, this.size/2);
+          ctx.fillStyle = "#000";
+          ctx.fillRect(this.x + this.size/2, this.y, this.size/8, this.size/8);
+        }
+        checkBite(character) {
+          const cx = character.x + character.width/2;
+          const cy = character.y + character.height/2;
+          const dist = Math.hypot(this.x + this.size/2 - cx, this.y + this.size/4 - cy);
+          return dist < this.size/2 + Math.max(character.width, character.height)/2;
+        }
+      }
+
+      for (let i = 0; i < 6; i++) clouds.push(new Cloud());
+      for (let i = 0; i < 4; i++) birds.push(new Bird());
+      for (let i = 0; i < 3; i++) planes.push(new Plane());
+
+      for (let i = 0; i < 8; i++) {
+        const x  = i * (W / 8) + (W / 16);
+        seaweeds.push(new Seaweed(x, H - 10));
+      }
+      for (let i = 0; i < 10; i++) fishes.push(new Fish());
+      for (let i = 0; i < 5; i++) crabs.push(new Crab());
+      for (let i = 0; i < 5; i++) jellyfishes.push(new Jellyfish());
+      for (let i = 0; i < 3; i++) octopuses.push(new Octopus());
+
+      const roger = new Character(
+        "Roger", "#0077cc",
+        150,
+        { left: "ArrowLeft", right: "ArrowRight", up: "ArrowUp", down: "ArrowDown" }
+      );
+      const chloe = new Character(
+        "Chloe", "#ff1493",
+        200,
+        { left: "KeyA", right: "KeyD", up: "KeyW", down: "KeyS" }
+      );
+
+      const items       = [];
+      let frameCount    = 0;
+      const candyInterval     = 90;
+      const holdHandsInterval = 900;   // ~15s
+      const stopHoldInterval  = 400;   // ~6.5s
+      const megaSpeedInterval = 600;   // ~10s
+      const slowCandyInterval = 600;   // ~10s
+      const hurricaneInterval = 900;   // ~15s
+
+      const powerUpIntervals = {
+        rainbowBoost: 800,
+        tether:       1200
+      };
+      const babySharkInterval = 1500;
+      const treasureInterval  = 200;
+
+      function handleCharacterCollision(a, b) {
+        if (
+          a.vy > 0 &&
+          a.y + a.height >= b.y &&
+          a.y + a.height - a.vy <= b.y &&
+          a.x + a.width > b.x &&
+          a.x < b.x + b.width
+        ) {
+          a.y  = b.y - a.height;
+          a.vy = 0;
+        }
+      }
+
+      function showPowerUpDescription(type) {
+        powerUpDescDiv.innerText = powerUpDescriptions[type] || "";
+      }
+
+      function logPhase1() {
+        if (!phase1Logged) {
+          const liR = document.createElement("li");
+          liR.innerText = `CANDY: ${roger.scoreCandy}`;
+          leftList.appendChild(liR);
+          const liC = document.createElement("li");
+          liC.innerText = `CANDY: ${chloe.scoreCandy}`;
+          rightList.appendChild(liC);
+          phase1Logged = true;
+        }
+      }
+
+      function logPhase2() {
+        if (!phase2Logged) {
+          const liR = document.createElement("li");
+          liR.innerText = `FLYING: ${roger.scoreFlying}`;
+          leftList.appendChild(liR);
+          const liC = document.createElement("li");
+          liC.innerText = `FLYING: ${chloe.scoreFlying}`;
+          rightList.appendChild(liC);
+          phase2Logged = true;
+        }
+      }
+
+      function logLevel3() {
+        if (!phase3Logged) {
+          const liR = document.createElement("li");
+          liR.innerText = `UNDERWATER: ${level3ScoreRoger}`;
+          leftList.appendChild(liR);
+          const liC = document.createElement("li");
+          liC.innerText = `UNDERWATER: ${level3ScoreChloe}`;
+          rightList.appendChild(liC);
+          phase3Logged = true;
+        }
+      }
+
+      function updateSidebarScores() {
+        if (stage === "level1") {
+          rogerCurrent.innerText = `CANDY: ${roger.scoreCandy}`;
+          chloeCurrent.innerText = `CANDY: ${chloe.scoreCandy}`;
+        } else if (stage === "level2") {
+          rogerCurrent.innerText = `FLYING: ${roger.scoreFlying}`;
+          chloeCurrent.innerText = `FLYING: ${chloe.scoreFlying}`;
+        } else if (stage === "level3") {
+          rogerCurrent.innerText = `UNDERWATER: ${level3ScoreRoger}`;
+          chloeCurrent.innerText = `UNDERWATER: ${level3ScoreChloe}`;
+        }
+      }
+
+      function resetToLevel1() {
+        stage             = "level1";
+        gamePaused        = false;
+        flyingMode        = false;
+        bigSharkMode      = false;
+        holdHands         = false;
+        bringHands        = false;
+        tetherActive      = false;
+        tetherTimer       = 0;
+        roger.scoreCandy  = 0;
+        chloe.scoreCandy  = 0;
+        roger.scoreFlying = 0;
+        chloe.scoreFlying = 0;
+        level3ScoreRoger  = 0;
+        level3ScoreChloe  = 0;
+        phase1Logged      = false;
+        phase2Logged      = false;
+        phase3Logged      = false;
+        roger.width       = 40;
+        roger.height      = 60;
+        chloe.width       = 40;
+        chloe.height      = 60;
+        roger.baseColor   = "#0077cc";
+        chloe.baseColor   = "#ff1493";
+        roger.x           = 150;
+        roger.y           = H - roger.height;
+        chloe.x           = 200;
+        chloe.y           = H - chloe.height;
+        items.length      = 0;
+        flyingItems.length      = 0;
+        flyingPowerUps.length   = 0;
+        phase2Items.length      = 0;
+        treasures.length        = 0;
+        goldCoins.length        = 0;
+        fishes.length           = 0;
+        enemySharks.length      = 0;
+        crocodiles.length       = 0;
+        slowCandyActive   = false;
+        slowCandyTimer    = 0;
+        candyHurricaneActive = false;
+        hurricaneTimer       = 0;
+        hurricaneCandyCount  = 0;
+        megaSpeedActive   = false;
+        megaSpeedTimer    = 0;
+        for (let i = 0; i < 10; i++) fishes.push(new Fish());
+      }
+
+      function resetToLevel2() {
+        stage             = "level2";
+        gamePaused        = false;
+        flyingMode        = true;
+        bigSharkMode      = false;
+        holdHands         = false;
+        bringHands        = false;
+        tetherActive      = false;
+        tetherTimer       = 0;
+        roger.scoreFlying = 0;
+        chloe.scoreFlying = 0;
+        level3ScoreRoger  = 0;
+        level3ScoreChloe  = 0;
+        phase2Logged      = false;
+        phase3Logged      = false;
+        roger.width       = 40;
+        roger.height      = 60;
+        chloe.width       = 40;
+        chloe.height      = 60;
+        roger.baseColor   = "#0077cc";
+        chloe.baseColor   = "#ff1493";
+        roger.x           = W * 0.3;
+        roger.y           = H * 0.5;
+        chloe.x           = W * 0.6;
+        chloe.y           = H * 0.5;
+        items.length      = 0;
+        flyingItems.length      = 0;
+        flyingPowerUps.length   = 0;
+        phase2Items.length      = 0;
+      }
+
+      function resetToLevel3() {
+        stage             = "level3";
+        gamePaused        = false;
+        flyingMode        = true;
+        bigSharkMode      = false;
+        holdHands         = false;
+        bringHands        = false;
+        tetherActive      = false;
+        tetherTimer       = 0;
+        roger.scoreFlying = 0;
+        chloe.scoreFlying = 0;
+        level3ScoreRoger  = 0;
+        level3ScoreChloe  = 0;
+        phase3Logged      = false;
+        roger.sharkScale  = 1;
+        roger.sharkBaseW  = 80;
+        roger.sharkBaseH  = 40;
+        chloe.sharkScale  = 1;
+        chloe.sharkBaseW  = 80;
+        chloe.sharkBaseH  = 40;
+        roger.width       = roger.sharkBaseW;
+        roger.height      = roger.sharkBaseH;
+        chloe.width       = chloe.sharkBaseW;
+        chloe.height      = chloe.sharkBaseH;
+        roger.baseColor   = "#0077cc";
+        chloe.baseColor   = "#ff1493";
+        roger.x           = W * 0.3;
+        roger.y           = H * 0.5;
+        chloe.x           = W * 0.6;
+        chloe.y           = H * 0.5;
+        items.length      = 0;
+        flyingItems.length      = 0;
+        flyingPowerUps.length   = 0;
+        phase2Items.length      = 0;
+        treasures.length        = 0;
+        goldCoins.length        = 0;
+        fishes.length           = 0;
+        enemySharks.length      = 0;
+        crocodiles.length       = 0;
+        slowCandyActive   = false;
+        slowCandyTimer    = 0;
+        candyHurricaneActive = false;
+        hurricaneTimer       = 0;
+        hurricaneCandyCount  = 0;
+        megaSpeedActive   = false;
+        megaSpeedTimer    = 0;
+
+        for (let i = 0; i < 10; i++) fishes.push(new Fish());
+        // spawn one enemy shark and one crocodile
+        enemySharks.push(new EnemyShark());
+        crocodiles.push(new Crocodile());
+      }
+
+      cheatsDiv.addEventListener("click", e => {
+        if (e.target.tagName === "BUTTON") {
+          const lvl = parseInt(e.target.dataset.level);
+          if (lvl === 1) resetToLevel1();
+          if (lvl === 2) resetToLevel2();
+          if (lvl === 3) resetToLevel3();
         }
       });
-    })();
+
+      function renderInitial() {
+        ctx.fillStyle = "#FFEFD5";
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = "#FFF8DC";
+        ctx.fillRect(0, H - 100, W, 100);
+        ctx.fillStyle = "#8B4513";
+        ctx.fillRect(50, 150, W - 100, 20);
+        trampolines.forEach(t => {
+          ctx.fillStyle = t.color;
+          ctx.fillRect(t.x, t.y, t.width, t.height);
+        });
+        roger.draw();
+        chloe.draw();
+      }
+
+      function spawnSpecial(type) {
+        let newItem;
+        let tries = 0;
+        do {
+          newItem = new SpecialItem(type);
+          tries++;
+        } while (
+          tries < 50 &&
+          items.some(itm => itm instanceof SpecialItem &&
+            Math.abs(itm.x - newItem.x) < newItem.width
+          )
+        );
+        items.push(newItem);
+        if (type === "holdHands") holdHandsItem = newItem;
+      }
+
+      const isMobile = 'ontouchstart' in window;
+      let joystickLeft  = { dx: 0, dy: 0, active: false };
+      let joystickRight = { dx: 0, dy: 0, active: false };
+
+      function setupJoystick() {
+        if (!isMobile) return;
+        const jl = document.getElementById("joystickLeft");
+        const jr = document.getElementById("joystickRight");
+        jl.style.display = "block";
+        jr.style.display = "block";
+        function initJoystick(elem, state) {
+          const knob   = elem.querySelector(".knob");
+          const rect   = elem.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const maxDist = rect.width / 2 - 25;
+          function onTouchStart(e) {
+            state.active = true;
+          }
+          function onTouchMove(e) {
+            if (!state.active) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const dx = touch.clientX - centerX;
+            const dy = touch.clientY - centerY;
+            const dist = Math.hypot(dx, dy);
+            const angle = Math.atan2(dy, dx);
+            const clamped = Math.min(dist, maxDist);
+            const xPos = centerX + Math.cos(angle) * clamped;
+            const yPos = centerY + Math.sin(angle) * clamped;
+            knob.style.left = (xPos - rect.left) + "px";
+            knob.style.top  = (yPos - rect.top)  + "px";
+            state.dx = (Math.cos(angle) * clamped) / maxDist;
+            state.dy = (Math.sin(angle) * clamped) / maxDist * -1;
+          }
+          function onTouchEnd(e) {
+            state.active = false;
+            state.dx = 0;
+            state.dy = 0;
+            knob.style.left = rect.width / 2 + "px";
+            knob.style.top  = rect.height / 2 + "px";
+          }
+          elem.addEventListener("touchstart", onTouchStart);
+          elem.addEventListener("touchmove", onTouchMove);
+          elem.addEventListener("touchend", onTouchEnd);
+          elem.addEventListener("touchcancel", onTouchEnd);
+          knob.style.left = rect.width / 2 + "px";
+          knob.style.top  = rect.height / 2 + "px";
+        }
+        initJoystick(jl, joystickLeft);
+        initJoystick(jr, joystickRight);
+      }
+
+      function gameLoop() {
+        frameCount++;
+        ctx.clearRect(0, 0, W, H);
+        pinwheelAngle += 0.1;
+        updateSidebarScores();
+
+        if (stage === "level1") {
+          trampolines.forEach(t => {
+            t.x += t.vx;
+            if (t.x <= 0 || t.x + t.width >= W) t.vx *= -1;
+          });
+
+          if (bringHands) {
+            ctx.fillStyle = "#FFEFD5";
+            ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = "#FFF8DC";
+            ctx.fillRect(0, H - 100, W, 100);
+            ctx.fillStyle = "#8B4513";
+            ctx.fillRect(50, 150, W - 100, 20);
+            const jarColors = ["#FF6347", "#FFD700", "#98FB98", "#87CEFA"];
+            jarColors.forEach((col, i) => {
+              const jarX = 80 + i * 180;
+              const jarY = 110;
+              ctx.fillStyle = "#FFFFFF";
+              ctx.fillRect(jarX, jarY, 60, 80);
+              ctx.strokeStyle = "#000";
+              ctx.lineWidth   = 2;
+              ctx.strokeRect(jarX, jarY, 60, 80);
+              ctx.fillStyle = col;
+              for (let c = 0; c < 10; c++) {
+                const cx = jarX + 10 + (c % 5) * 10;
+                const cy = jarY + 20 + Math.floor(c / 5) * 20;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctx.fill();
+              }
+              ctx.fillStyle = "#C0C0C0";
+              ctx.fillRect(jarX - 5, jarY - 10, 70, 10);
+              ctx.strokeRect(jarX - 5, jarY - 10, 70, 10);
+            });
+            trampolines.forEach(t => {
+              ctx.fillStyle = t.color;
+              ctx.fillRect(t.x, t.y, t.width, t.height);
+            });
+
+            roger.x += rogerDX;
+            roger.y += rogerDY;
+            chloe.x += chloeDX;
+            chloe.y += chloeDY;
+            roger.draw();
+            chloe.draw();
+            const yMid = roger.y + roger.height * 0.5;
+            const rogerHandX = roger.x + roger.width;
+            const chloeHandX = chloe.x;
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth   = 4;
+            ctx.beginPath();
+            ctx.moveTo(rogerHandX, yMid);
+            ctx.lineTo(chloeHandX, yMid);
+            ctx.stroke();
+            ctx.fillStyle = "#000";
+            ctx.fillRect(rogerHandX - 4, yMid - 4, 8, 8);
+            ctx.fillRect(chloeHandX - 4, yMid - 4, 8, 8);
+
+            bringHandsTimer--;
+            if (bringHandsTimer <= 0) {
+              bringHands = false;
+              holdHands = true;
+              handSpacing = chloe.x - roger.x;
+            }
+            requestAnimationFrame(gameLoop);
+            return;
+          }
+
+          ctx.fillStyle = "#FFEFD5";
+          ctx.fillRect(0, 0, W, H);
+          ctx.fillStyle = "#FFF8DC";
+          ctx.fillRect(0, H - 100, W, 100);
+          ctx.fillStyle = "#8B4513";
+          ctx.fillRect(50, 150, W - 100, 20);
+
+          const jarColors = ["#FF6347", "#FFD700", "#98FB98", "#87CEFA"];
+          jarColors.forEach((col, i) => {
+            const jarX = 80 + i * 180;
+            const jarY = 110;
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(jarX, jarY, 60, 80);
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth   = 2;
+            ctx.strokeRect(jarX, jarY, 60, 80);
+            ctx.fillStyle = col;
+            for (let c = 0; c < 10; c++) {
+              const cx = jarX + 10 + (c % 5) * 10;
+              const cy = jarY + 20 + Math.floor(c / 5) * 20;
+              ctx.beginPath();
+              ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            ctx.fillStyle = "#C0C0C0";
+            ctx.fillRect(jarX - 5, jarY - 10, 70, 10);
+            ctx.strokeRect(jarX - 5, jarY - 10, 70, 10);
+          });
+
+          trampolines.forEach(t => {
+            ctx.fillStyle = t.color;
+            ctx.fillRect(t.x, t.y, t.width, t.height);
+          });
+
+          if (holdHands) {
+            const baseSpeed = megaSpeedActive ? 24 : 12;
+            let dx = 0;
+            let wantJump = false;
+            const rLeft  = isMobile ? joystickRight.dx < -0.5 : keys["ArrowLeft"];
+            const rRight = isMobile ? joystickRight.dx > 0.5  : keys["ArrowRight"];
+            const rUp    = isMobile ? joystickRight.dy < -0.5 : keys["ArrowUp"];
+            const cLeft  = isMobile ? joystickLeft.dx < -0.5  : keys["KeyA"];
+            const cRight = isMobile ? joystickLeft.dx > 0.5   : keys["KeyD"];
+            const cUp    = isMobile ? joystickLeft.dy < -0.5  : keys["KeyW"];
+
+            if (rLeft || cLeft)  dx = -baseSpeed;
+            else if (rRight || cRight) dx = baseSpeed;
+            if ((rUp || cUp) && roger.y + roger.height >= GROUND_Y) wantJump = true;
+
+            roger.x += dx;
+            roger.vy = wantJump ? BOUNCE_VEL : roger.vy;
+            if (wantJump) roger.y = GROUND_Y - roger.height;
+
+            roger.vy += GRAVITY;
+            roger.y  += roger.vy;
+
+            chloe.x = roger.x + handSpacing;
+            chloe.y = roger.y;
+            chloe.vy = roger.vy;
+
+            if (roger.x < 0) roger.x = 0;
+            if (roger.x + roger.width > W) roger.x = W - roger.width;
+            chloe.x = roger.x + handSpacing;
+            if (chloe.x + chloe.width > W) {
+              chloe.x = W - chloe.width;
+              roger.x = chloe.x - handSpacing;
+            }
+            if (roger.y + roger.height > GROUND_Y) {
+              roger.y  = GROUND_Y - roger.height;
+              roger.vy = 0;
+              chloe.y  = roger.y;
+              chloe.vy = 0;
+            }
+            if (roger.y < 0) {
+              roger.y  = 0;
+              roger.vy = 0;
+              chloe.y  = roger.y;
+              chloe.vy = 0;
+            }
+
+            trampolines.forEach(t => {
+              if (
+                roger.vy > 0 &&
+                roger.y + roger.height >= t.y &&
+                (roger.y + roger.height - roger.vy) <= t.y &&
+                roger.x + roger.width > t.x &&
+                roger.x < t.x + t.width
+              ) {
+                roger.vy = BOUNCE_VEL;
+                roger.y  = t.y - roger.height;
+                chloe.vy = roger.vy;
+                chloe.y  = roger.y;
+              }
+            });
+
+            roger.draw();
+            chloe.draw();
+            const yMid = roger.y + roger.height * 0.5;
+            const rogerHandX = roger.x + roger.width;
+            const chloeHandX = chloe.x;
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth   = 4;
+            ctx.beginPath();
+            ctx.moveTo(rogerHandX, yMid);
+            ctx.lineTo(chloeHandX, yMid);
+            ctx.stroke();
+            ctx.fillStyle = "#000";
+            ctx.fillRect(rogerHandX - 4, yMid - 4, 8, 8);
+            ctx.fillRect(chloeHandX - 4, yMid - 4, 8, 8);
+
+          } else {
+            roger.update(chloe, isMobile ? joystickRight : null);
+            chloe.update(roger, isMobile ? joystickLeft : null);
+            handleCharacterCollision(roger, chloe);
+            handleCharacterCollision(chloe, roger);
+            roger.draw();
+            chloe.draw();
+          }
+
+          if (!gamePaused && frameCount % candyInterval === 0) {
+            items.push(new Candy());
+          }
+          if (!holdHands && !bringHands && !gamePaused && frameCount % holdHandsInterval === 0 && !holdHandsItem) {
+            spawnSpecial("holdHands");
+          }
+          if (holdHands && !bringHands && !gamePaused && frameCount % stopHoldInterval === 0) {
+            spawnSpecial("stopHoldingHands");
+          }
+          if (!gamePaused && frameCount % megaSpeedInterval === 0) {
+            spawnSpecial("megaSpeed");
+          }
+          if (!gamePaused && frameCount % slowCandyInterval === 0) {
+            spawnSpecial("slowCandy");
+          }
+          if (!gamePaused && frameCount % hurricaneInterval === 0) {
+            spawnSpecial("candyHurricane");
+          }
+
+          for (let i = items.length - 1; i >= 0; i--) {
+            const itm = items[i];
+            itm.update();
+            itm.draw();
+
+            if (itm instanceof SpecialItem) {
+              if (itm === holdHandsItem) {
+                if (itm.checkCatch(roger) || itm.checkCatch(chloe)) {
+                  bringHands = true;
+                  bringHandsTimer = bringHandsDuration;
+                  rogerStartX = roger.x;
+                  rogerStartY = roger.y;
+                  chloeStartX = chloe.x;
+                  chloeStartY = chloe.y;
+                  const gap = 5;
+                  const rogerTargetX = W / 2 - roger.width - gap / 2;
+                  const chloeTargetX = W / 2 + gap / 2;
+                  const targetY = H / 2 - roger.height / 2;
+                  rogerDX = (rogerTargetX - rogerStartX) / bringHandsDuration;
+                  rogerDY = (targetY - rogerStartY) / bringHandsDuration;
+                  chloeDX = (chloeTargetX - chloeStartX) / bringHandsDuration;
+                  chloeDY = (targetY - chloeStartY) / bringHandsDuration;
+                  showPowerUpDescription("holdHands");
+                  items.splice(i, 1);
+                }
+                continue;
+              }
+              if (itm.checkCatch(roger) || itm.checkCatch(chloe)) {
+                switch (itm.type) {
+                  case "stopHoldingHands":
+                    holdHands = false;
+                    showPowerUpDescription("stopHoldingHands");
+                    messageText = "Stop Holding Hands!";
+                    messageTimer = 120;
+                    break;
+                  case "megaSpeed":
+                    megaSpeedActive = true;
+                    megaSpeedTimer  = 600;
+                    showPowerUpDescription("megaSpeed");
+                    messageText = "Mega Speed!";
+                    messageTimer = 120;
+                    break;
+                  case "slowCandy":
+                    slowCandyActive = true;
+                    slowCandyTimer  = 600;
+                    showPowerUpDescription("slowCandy");
+                    messageText = "Slow Candy!";
+                    messageTimer = 120;
+                    break;
+                  case "candyHurricane":
+                    candyHurricaneActive = true;
+                    hurricaneTimer       = 1800;
+                    hurricaneCandyCount  = 100;
+                    showPowerUpDescription("candyHurricane");
+                    messageText = "Candy Hurricane!";
+                    messageTimer = 120;
+                    break;
+                  case "babyShark":
+                    bigSharkMode = true;
+                    roger.sharkScale   = 1;
+                    roger.sharkBaseW   = 80;
+                    roger.sharkBaseH   = 40;
+                    roger.width        = roger.sharkBaseW;
+                    roger.height       = roger.sharkBaseH;
+                    roger.baseColor    = "#0077cc";
+                    chloe.sharkScale   = 1;
+                    chloe.sharkBaseW   = 80;
+                    chloe.sharkBaseH   = 40;
+                    chloe.width        = chloe.sharkBaseW;
+                    chloe.height       = chloe.sharkBaseH;
+                    chloe.baseColor    = "#ff1493";
+                    showPowerUpDescription("babyShark");
+                    break;
+                }
+                items.splice(i, 1);
+                continue;
+              }
+              if (itm.y - itm.height > H) {
+                items.splice(i, 1);
+              }
+            } else {
+              const caughtRoger = itm.checkCatch(roger);
+              const caughtChloe = itm.checkCatch(chloe);
+              if (caughtRoger || caughtChloe) {
+                if (holdHands) {
+                  roger.scoreCandy++;
+                  chloe.scoreCandy++;
+                } else if (caughtRoger) {
+                  roger.scoreCandy++;
+                } else {
+                  chloe.scoreCandy++;
+                }
+                if (!holdHands) {
+                  if (caughtRoger && roger.scoreCandy < 25 && roger.scoreCandy % 5 === 0) {
+                    const oldW = roger.width, oldH = roger.height;
+                    roger.width  += 10;
+                    roger.height += 15;
+                    roger.x -= (roger.width  - oldW) / 2;
+                    roger.y -= (roger.height - oldH) / 2;
+                  }
+                  if (caughtChloe && chloe.scoreCandy < 25 && chloe.scoreCandy % 5 === 0) {
+                    const oldW = chloe.width, oldH = chloe.height;
+                    chloe.width  += 10;
+                    chloe.height += 15;
+                    chloe.x -= (chloe.width  - oldW) / 2;
+                    chloe.y -= (chloe.height - oldH) / 2;
+                  }
+                } else {
+                  if (roger.scoreCandy < 25 && roger.scoreCandy % 5 === 0) {
+                    const oldW = roger.width, oldH = roger.height;
+                    roger.width  += 10;
+                    roger.height += 15;
+                    chloe.width  += 10;
+                    chloe.height += 15;
+                    roger.x -= (roger.width  - oldW) / 2;
+                    roger.y -= (roger.height - oldH) / 2;
+                    chloe.x = roger.x + handSpacing;
+                    chloe.y = roger.y;
+                  }
+                }
+                items.splice(i, 1);
+                continue;
+              }
+              if (itm.y - itm.radius > H) {
+                items.splice(i, 1);
+              }
+            }
+          }
+
+          if (slowCandyActive) {
+            slowCandyTimer--;
+            if (slowCandyTimer <= 0) {
+              slowCandyActive = false;
+            }
+          }
+
+          if (candyHurricaneActive && hurricaneTimer > 0 && hurricaneCandyCount > 0) {
+            if (frameCount % 6 === 0) {
+              items.push(new Candy());
+              hurricaneCandyCount--;
+            }
+            hurricaneTimer--;
+            if (hurricaneTimer <= 0 || hurricaneCandyCount <= 0) {
+              candyHurricaneActive = false;
+              hurricaneTimer = 0;
+              hurricaneCandyCount = 0;
+            }
+          }
+
+          if (megaSpeedActive) {
+            megaSpeedTimer--;
+            if (megaSpeedTimer <= 0) megaSpeedActive = false;
+          }
+
+          if (messageTimer > 0) {
+            messageTimer--;
+            ctx.fillStyle = "#0f0";
+            ctx.font       = "30px Courier New, monospace";
+            ctx.textAlign  = "center";
+            ctx.fillText(messageText, W / 2, 50);
+          }
+
+          if (!holdHands && roger.scoreCandy >= 25 && chloe.scoreCandy >= 25) {
+            logPhase1();
+            resetToLevel2();
+          }
+        }
+
+        if (stage === "level2") {
+          ctx.fillStyle = "#87CEEB";
+          ctx.fillRect(0, 0, W, H);
+
+          ctx.fillStyle = "#FFD700";
+          ctx.beginPath();
+          ctx.arc(80, 80, 50, 0, 2 * Math.PI);
+          ctx.fill();
+
+          clouds.forEach(c => { c.update(); c.draw(); });
+          birds.forEach(b => { b.update(); b.draw(); });
+          planes.forEach(p => { p.update(); p.draw(); });
+
+          if (!gamePaused) {
+            Object.entries(powerUpIntervals).forEach(([type, interval]) => {
+              if (frameCount % interval === 0) {
+                flyingPowerUps.push(new FlyingPowerUp(type));
+              }
+            });
+            if (frameCount % 120 === 0) {
+              const types = ["fairy", "unicorn", "icecream"];
+              const t = types[Math.floor(Math.random() * types.length)];
+              phase2Items.push(new Phase2Collectible(t));
+            }
+            if (frameCount % 2600 === 0) {
+              flyingPowerUps.push(new FlyingPowerUp("tether"));
+            }
+          }
+
+          if (isMobile) {
+            if (tetherActive) {
+              let mx = 0, my = 0;
+              if (joystickRight.dx !== 0 || joystickRight.dy !== 0) {
+                mx = joystickRight.dx * FLY_SPEED;
+                my = joystickRight.dy * FLY_SPEED;
+              } else if (joystickLeft.dx !== 0 || joystickLeft.dy !== 0) {
+                mx = joystickLeft.dx * FLY_SPEED;
+                my = joystickLeft.dy * FLY_SPEED;
+              }
+              roger.x += mx;
+              roger.y -= my;
+              chloe.x += mx;
+              chloe.y -= my;
+            } else {
+              roger.x += joystickRight.dx * FLY_SPEED;
+              roger.y -= joystickRight.dy * FLY_SPEED;
+              chloe.x += joystickLeft.dx * FLY_SPEED;
+              chloe.y -= joystickLeft.dy * FLY_SPEED;
+            }
+          } else {
+            if (tetherActive) {
+              let moveX = 0, moveY = 0;
+              if (keys["ArrowLeft"] || keys["KeyA"])  moveX = -FLY_SPEED;
+              else if (keys["ArrowRight"] || keys["KeyD"]) moveX = FLY_SPEED;
+              if (keys["ArrowUp"] || keys["KeyW"])    moveY = -FLY_SPEED;
+              else if (keys["ArrowDown"] || keys["KeyS"]) moveY = FLY_SPEED;
+              roger.x += moveX;
+              roger.y += moveY;
+              chloe.x += moveX;
+              chloe.y += moveY;
+            } else {
+              const moveFactor = hazeActive ? 0.8 : 1;
+              let speedMod    = rainbowActive ? 1.5 : 1;
+              if (keys["ArrowLeft"])  roger.x -= FLY_SPEED * moveFactor * speedMod;
+              else if (keys["ArrowRight"]) roger.x += FLY_SPEED * moveFactor * speedMod;
+              if (keys["ArrowUp"])    roger.y -= FLY_SPEED * moveFactor * speedMod;
+              else if (keys["ArrowDown"]) roger.y += FLY_SPEED * moveFactor * speedMod;
+
+              if (keys["KeyA"])  chloe.x -= FLY_SPEED * moveFactor * speedMod;
+              else if (keys["KeyD"]) chloe.x += FLY_SPEED * moveFactor * speedMod;
+              if (keys["KeyW"])    chloe.y -= FLY_SPEED * moveFactor * speedMod;
+              else if (keys["KeyS"]) chloe.y += FLY_SPEED * moveFactor * speedMod;
+            }
+          }
+
+          [roger, chloe].forEach(ch => {
+            if (ch.x < 0) ch.x = 0;
+            if (ch.x + ch.width > W) ch.x = W - ch.width;
+            if (ch.y < 0) ch.y = 0;
+            if (ch.y + ch.height > H) ch.y = H - ch.height;
+          });
+
+          roger.draw();
+          chloe.draw();
+
+          if (tetherActive) {
+            const x1 = roger.x + roger.width / 2;
+            const y1 = roger.y + roger.height / 2;
+            const x2 = chloe.x + chloe.width / 2;
+            const y2 = chloe.y + chloe.height / 2;
+            ctx.strokeStyle = "#FFD700";
+            ctx.lineWidth   = 4;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            tetherTimer--;
+            if (tetherTimer <= 0) tetherActive = false;
+          }
+
+          ctx.fillStyle = "#fff";
+          ctx.font       = "20px Courier New, monospace";
+          ctx.textAlign  = "center";
+          const scoreText = `FLYING SCORE →  Roger: ${roger.scoreFlying}   Chloe: ${chloe.scoreFlying}`;
+          ctx.fillText(scoreText, W / 2, H - 10);
+
+          for (let i = flyingItems.length - 1; i >= 0; i--) {
+            const fitm = flyingItems[i];
+            fitm.update();
+            fitm.draw();
+            const caughtR = fitm.checkCatch(roger);
+            const caughtC = fitm.checkCatch(chloe);
+            if (caughtR || caughtC) {
+              let points = fitm.type === "unicorn" ? 3 : (fitm.type === "icecream" ? 2 : 1);
+              if (rainbowActive) points *= 2;
+              if (tetherActive) {
+                roger.scoreFlying += points;
+                chloe.scoreFlying += points;
+              } else {
+                if (caughtR) roger.scoreFlying += points;
+                if (caughtC) chloe.scoreFlying += points;
+              }
+              flyingItems.splice(i, 1);
+            } else if (fitm.y + fitm.radius < 0) {
+              flyingItems.splice(i, 1);
+            }
+          }
+
+          for (let i = flyingPowerUps.length - 1; i >= 0; i--) {
+            const pup = flyingPowerUps[i];
+            pup.update();
+            pup.draw();
+            const caughtR = pup.checkCatch(roger);
+            const caughtC = pup.checkCatch(chloe);
+            if (caughtR || caughtC) {
+              showPowerUpDescription(pup.type);
+              switch (pup.type) {
+                case "rainbowBoost":
+                  rainbowActive = true;
+                  rainbowTimer  = 600;
+                  messageText   = "Rainbow Boost!";
+                  messageTimer  = 120;
+                  break;
+                case "tether":
+                  tetherActive = true;
+                  tetherTimer  = 600;
+                  messageText   = "Tether Activated!";
+                  messageTimer  = 120;
+                  break;
+              }
+              flyingPowerUps.splice(i, 1);
+              continue;
+            } else if (pup.y + pup.radius < 0) {
+              flyingPowerUps.splice(i, 1);
+            }
+          }
+
+          for (let i = flameRings.length - 1; i >= 0; i--) {
+            const fr = flameRings[i];
+            fr.update();
+            fr.draw();
+            if (fr.life <= 0) flameRings.splice(i, 1);
+            else {
+              floatingLoop:
+              for (let j = 0; j < flyingItems.length; j++) {
+                const fitm = flyingItems[j];
+                const dx   = fitm.x - fr.x;
+                const dy   = fitm.y - fr.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < fr.radius) {
+                  roger.scoreFlying++;
+                  chloe.scoreFlying++;
+                  flyingItems.splice(j, 1);
+                  break floatingLoop;
+                }
+              }
+            }
+          }
+
+          if (hazeActive) {
+            hazeTimer--;
+            if (hazeTimer <= 0) hazeActive = false;
+          }
+          if (rainbowActive) {
+            rainbowTimer--;
+            if (rainbowTimer <= 0) rainbowActive = false;
+          }
+          if (turboActive) {
+            turboTimer--;
+            if (turboTimer <= 0) {
+              turboActive = false;
+              flameRings.push(new FlameRing(roger.x + roger.width / 2, roger.y + roger.height / 2));
+              flameRings.push(new FlameRing(chloe.x + chloe.width / 2, chloe.y + chloe.height / 2));
+            }
+          }
+
+          for (let i = phase2Items.length - 1; i >= 0; i--) {
+            const itm = phase2Items[i];
+            itm.update();
+            itm.draw();
+            const caughtR = itm.checkCatch(roger);
+            const caughtC = itm.checkCatch(chloe);
+            if (caughtR || caughtC) {
+              let points = itm.type === "unicorn" ? 3 : (itm.type === "icecream" ? 2 : 1);
+              if (rainbowActive) points *= 2;
+              if (tetherActive) {
+                roger.scoreFlying += points;
+                chloe.scoreFlying += points;
+              } else {
+                if (caughtR) roger.scoreFlying += points;
+                if (caughtC) chloe.scoreFlying += points;
+              }
+              phase2Items.splice(i, 1);
+            }
+          }
+
+          if (roger.scoreFlying >= 40 && chloe.scoreFlying >= 40) {
+            logPhase2();
+            resetToLevel3();
+          }
+        }
+
+        if (stage === "level3") {
+          // Background
+          ctx.fillStyle = "#1E90FF";
+          ctx.fillRect(0, 0, W, H);
+          // Sea floor
+          ctx.fillStyle = "#8B4513";
+          ctx.fillRect(0, H - 50, W, 50);
+
+          // Sea castle & anchor
+          ctx.fillStyle = "#555";
+          ctx.beginPath();
+          ctx.moveTo(100, H - 50);
+          ctx.lineTo(100, H - 180);
+          ctx.lineTo(180, H - 240);
+          ctx.lineTo(260, H - 180);
+          ctx.lineTo(260, H - 50);
+          ctx.closePath();
+          ctx.fill();
+          ctx.fillRect(120, H - 120, 40, 70);
+          ctx.fillRect(200, H - 160, 40, 110);
+          // Anchor
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth   = 4;
+          ctx.beginPath();
+          ctx.moveTo(400, H - 50);
+          ctx.lineTo(400, H - 100);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(390, H - 50, 10, 0, Math.PI, true);
+          ctx.moveTo(380, H - 50);
+          ctx.lineTo(370, H - 40);
+          ctx.moveTo(420, H - 50);
+          ctx.lineTo(430, H - 40);
+          ctx.stroke();
+
+          // Boat at top
+          const boatX = W/2 - boatW/2;
+          ctx.fillStyle = "#8B4513";
+          ctx.fillRect(boatX, boatY, boatW, boatH);
+          ctx.fillStyle = "#000";
+          ctx.fillRect(boatX + 30, boatY - 10, 60, 10);
+          // Hook line
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth   = 2;
+          ctx.beginPath();
+          ctx.moveTo(W/2, boatY + boatH);
+          ctx.lineTo(W/2, wormY - 5);
+          ctx.stroke();
+          // Worm on hook
+          ctx.fillStyle = "#FF4500";
+          ctx.beginPath();
+          ctx.arc(wormX, wormY, 6, 0, 2 * Math.PI);
+          ctx.fill();
+
+          seaweeds.forEach(sw => sw.draw());
+          jellyfishes.forEach(j => { j.update(); j.draw(); });
+          octopuses.forEach(o => { o.update(); o.draw(); });
+
+          // Update and draw enemy sharks
+          enemySharks.forEach(sh => {
+            sh.update();
+            sh.draw();
+            [roger, chloe].forEach(ch => {
+              if (sh.checkBite(ch) && ch.invincible <= 0) {
+                ch.invincible = 60;
+                if (ch === roger && level3ScoreRoger > 0) level3ScoreRoger--;
+                if (ch === chloe && level3ScoreChloe > 0) level3ScoreChloe--;
+              }
+            });
+          });
+
+          // Update and draw crocodiles
+          crocodiles.forEach(cr => {
+            cr.update();
+            cr.draw();
+            [roger, chloe].forEach(ch => {
+              if (cr.checkBite(ch) && ch.invincible <= 0) {
+                ch.invincible = 60;
+                if (ch === roger && level3ScoreRoger > 0) level3ScoreRoger--;
+                if (ch === chloe && level3ScoreChloe > 0) level3ScoreChloe--;
+              }
+            });
+          });
+
+          for (let i = fishes.length - 1; i >= 0; i--) {
+            const f = fishes[i];
+            f.update();
+            f.draw();
+            if (f.checkCatch(roger)) {
+              level3ScoreRoger++;
+              level3ScoreChloe++;
+              fishes.splice(i, 1);
+              continue;
+            }
+            if (f.checkCatch(chloe)) {
+              level3ScoreRoger++;
+              level3ScoreChloe++;
+              fishes.splice(i, 1);
+              continue;
+            }
+            if (bigSharkMode) {
+              const fx = f.x, fy = f.y;
+              const rx = roger.x + (roger.sharkBaseW * roger.sharkScale) / 2;
+              const ry = roger.y + (roger.sharkBaseH * roger.sharkScale) / 2;
+              const distR = Math.hypot(fx - rx, fy - ry);
+              const cx = chloe.x + (chloe.sharkBaseW * chloe.sharkScale) / 2;
+              const cy = chloe.y + (chloe.sharkBaseH * chloe.sharkScale) / 2;
+              const distC = Math.hypot(fx - cx, fy - cy);
+              const sharkRadius = Math.max(roger.sharkBaseW * roger.sharkScale, roger.sharkBaseH * roger.sharkScale) / 2;
+              if (distR < f.size + sharkRadius || distC < f.size + sharkRadius) {
+                level3ScoreRoger += 2;
+                level3ScoreChloe += 2;
+                fishes.splice(i, 1);
+              }
+            }
+          }
+
+          crabs.forEach(c => { c.update(); c.draw(); });
+
+          if (frameCount % babySharkInterval === 0) {
+            items.push(new SpecialItem("babyShark"));
+          }
+          for (let i = items.length - 1; i >= 0; i--) {
+            const itm = items[i];
+            if (itm instanceof SpecialItem && itm.type === "babyShark") {
+              itm.update();
+              itm.draw();
+              if (itm.checkCatch(roger) || itm.checkCatch(chloe)) {
+                bigSharkMode = true;
+                roger.sharkScale   = 1;
+                roger.sharkBaseW   = 80;
+                roger.sharkBaseH   = 40;
+                roger.width        = roger.sharkBaseW;
+                roger.height       = roger.sharkBaseH;
+                roger.baseColor    = "#0077cc";
+                chloe.sharkScale   = 1;
+                chloe.sharkBaseW   = 80;
+                chloe.sharkBaseH   = 40;
+                chloe.width        = chloe.sharkBaseW;
+                chloe.height       = chloe.sharkBaseH;
+                chloe.baseColor    = "#ff1493";
+                showPowerUpDescription("babyShark");
+                items.splice(i, 1);
+              }
+            }
+          }
+
+          if (frameCount % treasureInterval === 0) {
+            treasures.push(new Treasure());
+          }
+          for (let i = treasures.length - 1; i >= 0; i--) {
+            const tr = treasures[i];
+            tr.update();
+            tr.draw();
+            let collected = false;
+            if (tr.checkCatchByPlayer(roger)) {
+              level3ScoreRoger += 5;
+              level3ScoreChloe += 5;
+              collected = true;
+            }
+            if (!collected && tr.checkCatchByPlayer(chloe)) {
+              level3ScoreRoger += 5;
+              level3ScoreChloe += 5;
+              collected = true;
+            }
+            if (!collected) {
+              for (const c of crabs) {
+                if (tr.checkCatchByCrab(c)) {
+                  collected = true;
+                  break;
+                }
+              }
+            }
+            if (collected) {
+              showPowerUpDescription("treasure");
+              // coin explosion: shoot coins upward like fireworks
+              for (let n = 0; n < 30; n++) {
+                const offsetX = tr.x;
+                const offsetY = tr.y;
+                goldCoins.push(new GoldCoin(offsetX, offsetY));
+              }
+              treasures.splice(i, 1);
+            }
+          }
+
+          for (let i = goldCoins.length - 1; i >= 0; i--) {
+            const gc = goldCoins[i];
+            gc.update();
+            gc.draw();
+            let taken = false;
+            for (const c of crabs) {
+              if (gc.checkCatchByCrab(c)) {
+                taken = true;
+                break;
+              }
+            }
+            if (!taken && gc.checkCatchByPlayer(roger)) {
+              level3ScoreRoger++;
+              level3ScoreChloe++;
+              taken = true;
+            }
+            if (!taken && gc.checkCatchByPlayer(chloe)) {
+              level3ScoreRoger++;
+              level3ScoreChloe++;
+              taken = true;
+            }
+            if (taken) {
+              goldCoins.splice(i, 1);
+            } else if (gc.y - gc.radius > H - 50) {
+              goldCoins.splice(i, 1);
+            }
+          }
+
+          for (let i = bubbles.length - 1; i >= 0; i--) {
+            const b = bubbles[i];
+            b.update();
+            b.draw();
+            if (b.life <= 0) bubbles.splice(i, 1);
+          }
+
+          if (isMobile) {
+            roger.x += joystickRight.dx * 2;
+            roger.y -= joystickRight.dy * 2;
+            chloe.x += joystickLeft.dx * 2;
+            chloe.y -= joystickLeft.dy * 2;
+          } else {
+            let speedMod3 = 2;
+            if (keys["ArrowLeft"])  roger.x -= speedMod3;
+            else if (keys["ArrowRight"]) roger.x += speedMod3;
+            if (keys["ArrowUp"])    roger.y -= speedMod3;
+            else if (keys["ArrowDown"]) roger.y += speedMod3;
+
+            if (keys["KeyA"])  chloe.x -= speedMod3;
+            else if (keys["KeyD"]) chloe.x += speedMod3;
+            if (keys["KeyW"])    chloe.y -= speedMod3;
+            else if (keys["KeyS"]) chloe.y += speedMod3;
+          }
+
+          [roger, chloe].forEach(ch => {
+            if (ch.invincible > 0) ch.invincible--;
+            if (ch.x < 0) ch.x = 0;
+            if (ch.x + ch.width > W) ch.x = W - ch.width;
+            if (ch.y < 0) ch.y = 0;
+            if (ch.y + ch.height > H - 50) ch.y = H - 50 - ch.height;
+          });
+
+          roger.draw();
+          chloe.draw();
+
+          logLevel3();
+        }
+
+        if (messageTimer > 0) {
+          messageTimer--;
+          ctx.fillStyle = "#0f0";
+          ctx.font       = "30px Courier New, monospace";
+          ctx.textAlign  = "center";
+          ctx.fillText(messageText, W / 2, 50);
+        }
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      window.addEventListener("keydown", e => {
+        if (e.code in keys) keys[e.code] = true;
+      });
+      window.addEventListener("keyup", e => {
+        if (e.code in keys) keys[e.code] = false;
+      });
+
+      setupJoystick();
+      renderInitial();
+      gameLoop();
+    };
   </script>
 </body>
 </html>
