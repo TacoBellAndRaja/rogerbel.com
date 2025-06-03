@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Changer</title>
+  <style>
+    /* Self‐contained CSS */
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+    header {
+      background: #0066cc;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      width: 100%;
+    }
+    .game-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .game-container h1 {
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: 2px solid #0066cc;
+      background: white;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #e6f0ff;
+    }
+    .footer {
+      text-align: center;
+      color: #777;
+      margin: 20px 0;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Color Changer</h1>
+  </header>
+
+  <div class="game-container">
+    <p>Click to change background color:</p>
+    <button id="changeColor">Change Color</button>
+  </div>
+
+  <div class="footer">
+    <a href="index.html">Back to Home</a>
+  </div>
+
+  <script>
+    (function() {
+      const button = document.getElementById('changeColor');
+      function getRandomColor() {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+      button.addEventListener('click', () => {
+        document.body.style.background = getRandomColor();
+      });
+    })();
+  </script>
+</body>
+</html>
