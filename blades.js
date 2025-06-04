@@ -19,15 +19,114 @@ let config = {
     { id: "AOF7", name: "Ut aliquip ex ea commodo consequat", ep: "EP5" }
   ],
   assets: [
-    { aof: "AOF1", name: "Asset 1A", owner: "Alice", start: "2025-01-01", end:   "2025-06-30", spent: 50000, budget: 100000, completedPoints: 40, totalPoints: 100, details: "Asset 1A is on track." },
-    { aof: "AOF1", name: "Asset 1B", owner: "Bob",   start: "2025-03-01", end:   "2025-09-30", spent: 70000, budget: 70000,  completedPoints: 80, totalPoints: 100, details: "Asset 1B has spent its budget and is nearing completion." },
-    { aof: "AOF2", name: "Asset 2A", owner: "Carol", start: "2025-02-15", end:   "2025-05-15", spent: 30000, budget: 50000,  completedPoints: 60, totalPoints: 100, details: "Asset 2A progressed smoothly; pending final review." },
-    { aof: "AOF3", name: "Asset 3A", owner: "David", start: "2025-01-20", end:   "2025-04-20", spent: 45000, budget: 60000,  completedPoints: 50, totalPoints: 100, details: "Asset 3A is midway; facing minor scope adjustments." },
-    { aof: "AOF4", name: "Asset 4A", owner: "Eve",   start: "2025-04-01", end:   "2025-10-01", spent: 20000, budget: 80000,  completedPoints: 20, totalPoints: 100, details: "Asset 4A kicked off recently; still early phases." },
-    { aof: "AOF4", name: "Asset 4B", owner: "Frank", start: "2025-02-01", end:   "2025-08-01", spent: 60000, budget: 90000,  completedPoints: 70, totalPoints: 100, details: "Asset 4B is high priority and well on schedule." },
-    { aof: "AOF5", name: "Asset 5A", owner: "Grace", start: "2025-03-10", end:   "2025-07-10", spent: 30000, budget: 40000,  completedPoints: 30, totalPoints: 100, details: "Asset 5A facing some delays due to resource constraints." },
-    { aof: "AOF6", name: "Asset 6A", owner: "Heidi", start: "2025-01-05", end:   "2025-12-31", spent: 100000, budget: 150000, completedPoints: 50, totalPoints: 100, details: "Asset 6A is a long-term initiative; steady progress reported." },
-    { aof: "AOF7", name: "Asset 7A", owner: "Ivan",  start: "2025-05-01", end:   "2025-09-30", spent: 20000, budget: 50000,  completedPoints: 20, totalPoints: 100, details: "Asset 7A just started; planning stages underway." }
+    {
+      aof: "AOF1",
+      name: "Asset 1A",
+      owner: "Alice",
+      start: "2025-01-01",
+      end: "2025-06-30",
+      spent: 50000,
+      budget: 100000,
+      completedPoints: 40,
+      totalPoints: 100,
+      details: "Asset 1A is on track."
+    },
+    {
+      aof: "AOF1",
+      name: "Asset 1B",
+      owner: "Bob",
+      start: "2025-03-01",
+      end: "2025-09-30",
+      spent: 70000,
+      budget: 70000,
+      completedPoints: 80,
+      totalPoints: 100,
+      details: "Asset 1B has spent its budget and is nearing completion."
+    },
+    {
+      aof: "AOF2",
+      name: "Asset 2A",
+      owner: "Carol",
+      start: "2025-02-15",
+      end: "2025-05-15",
+      spent: 30000,
+      budget: 50000,
+      completedPoints: 60,
+      totalPoints: 100,
+      details: "Asset 2A progressed smoothly; pending final review."
+    },
+    {
+      aof: "AOF3",
+      name: "Asset 3A",
+      owner: "David",
+      start: "2025-01-20",
+      end: "2025-04-20",
+      spent: 45000,
+      budget: 60000,
+      completedPoints: 50,
+      totalPoints: 100,
+      details: "Asset 3A is midway; facing minor scope adjustments."
+    },
+    {
+      aof: "AOF4",
+      name: "Asset 4A",
+      owner: "Eve",
+      start: "2025-04-01",
+      end: "2025-10-01",
+      spent: 20000,
+      budget: 80000,
+      completedPoints: 20,
+      totalPoints: 100,
+      details: "Asset 4A kicked off recently; still early phases."
+    },
+    {
+      aof: "AOF4",
+      name: "Asset 4B",
+      owner: "Frank",
+      start: "2025-02-01",
+      end: "2025-08-01",
+      spent: 60000,
+      budget: 90000,
+      completedPoints: 70,
+      totalPoints: 100,
+      details: "Asset 4B is high priority and well on schedule."
+    },
+    {
+      aof: "AOF5",
+      name: "Asset 5A",
+      owner: "Grace",
+      start: "2025-03-10",
+      end: "2025-07-10",
+      spent: 30000,
+      budget: 40000,
+      completedPoints: 30,
+      totalPoints: 100,
+      details: "Asset 5A facing some delays due to resource constraints."
+    },
+    {
+      aof: "AOF6",
+      name: "Asset 6A",
+      owner: "Heidi",
+      start: "2025-01-05",
+      end: "2025-12-31",
+      spent: 100000,
+      budget: 150000,
+      completedPoints: 50,
+      totalPoints: 100,
+      details: "Asset 6A is a long-term initiative; steady progress reported."
+    },
+    {
+      aof: "AOF7",
+      name: "Asset 7A",
+      owner: "Ivan",
+      start: "2025-05-01",
+      end: "2025-09-30",
+      spent: 20000,
+      budget: 50000,
+      completedPoints: 20,
+      totalPoints: 100,
+      details: "Asset 7A just started; planning stages underway."
+    }
   ]
 };
 
@@ -40,6 +139,18 @@ let selectedOwners = [];
 function daysBetween(date1, date2) {
   const msPerDay = 1000 * 60 * 60 * 24;
   return Math.round((date2 - date1) / msPerDay);
+}
+
+// Parse either an Excel‐serial date (number) or ISO‐style string into "YYYY-MM-DD"
+function parseDateField(value) {
+  if (!value) return "";
+  if (typeof value === "number") {
+    // Excel stores dates as numbers since 1900; use SheetJS to decode
+    const dt = XLSX.SSF.parse_date_code(value);
+    return `${dt.y}-${String(dt.m).padStart(2, "0")}-${String(dt.d).padStart(2, "0")}`;
+  }
+  // Assume it's already a string like "2025-06-04"
+  return value;
 }
 
 function calculatePercentages(asset) {
@@ -74,7 +185,7 @@ function matchesSearch(asset) {
   const term = searchTerm.toLowerCase();
   return (
     asset.name.toLowerCase().includes(term) ||
-    asset.owner.toLowerCase().includes(term) ||
+    (asset.owner && asset.owner.toLowerCase().includes(term)) ||
     (asset.details && asset.details.toLowerCase().includes(term))
   );
 }
@@ -349,15 +460,18 @@ function selectAsset(assetId) {
   bladeBody.innerHTML = `
     <h2>${asset.name}</h2>
     <p><strong>Owner:</strong> ${asset.owner}</p>
-    <p><strong>Start:</strong> ${asset.start}</p>
-    <p><strong>End:</strong> ${asset.end}</p>
-    <p><strong>Spent:</strong> $${(asset.spent || 0).toLocaleString()} / $${(asset.budget||0).toLocaleString()}</p>
+    <p><strong>Start Date:</strong> ${asset.start}</p>
+    <p><strong>ART Approval:</strong> ${asset.ARTApprovalDate || ""}</p>
+    <p><strong>SteerCo Approval:</strong> ${asset.SteerCoApprovalDate || ""}</p>
+    <p><strong>Total Est. Cost:</strong> $${(asset.budget || 0).toLocaleString()}</p>
     <p><strong>Scope:</strong> ${asset.completedPoints || 0} / ${asset.totalPoints || 0} story points</p>
     <hr>
+    <p><strong>Initiative:</strong> ${asset.initiative || ""}</p>
+    <p><strong>Pillar:</strong> ${asset.pillar || ""}</p>
+    <p><strong>TPM:</strong> ${asset.tpm || ""}</p>
+    <p><strong>Status:</strong> ${asset.status || ""}</p>
+    <hr>
     <p>${asset.details || ""}</p>
-    ${asset.pillar ? `<p><strong>Pillar:</strong> ${asset.pillar}</p>` : ""}
-    ${asset.tpm ? `<p><strong>TPM:</strong> ${asset.tpm}</p>` : ""}
-    ${asset.status ? `<p><strong>Status:</strong> ${asset.status}</p>` : ""}
   `;
 
   document.getElementById("blade").classList.add("open");
@@ -416,74 +530,80 @@ function parseExcelFile(file) {
     const worksheet = workbook.Sheets[firstSheetName];
     const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
-    // Expected columns in Excel:
-    //   • EnterprisePriority   (e.g. "EP1")
-    //   • AreaOfFocus          (e.g. "AOF3")
-    //   • AssetMPOID           (string or number, 1:1 with AssetName)
-    //   • AssetName            (string)
-    //   • Owner                (string)
-    //   • Description          (string)
-    //   • Pillar               (string)
-    //   • TPM                  (string)
-    //   • Status               (string)
-    //   • TotalEstimatedCost   (number)
-    //   • LaunchDate           (YYYY-MM-DD or Excel date)
-    //   • ScopePoints          (number – total)
-    //   • CompletedPoints      (number)
+    // Required columns (in any order):
+    //   • EnterprisePriority
+    //   • AreaOfFocus
+    //   • AssetMPOID
+    //   • AssetName
     //
-    // Validate presence of required columns:
+    // Optional but recognized if present:
+    //   • Initiative
+    //   • StartDate
+    //   • ARTApprovalDate
+    //   • SteerCoApprovalDate
+    //   • Owner
+    //   • Description
+    //   • Pillar
+    //   • TPM
+    //   • Status
+    //   • TotalEstimatedCost
+    //   • LaunchDate
+    //   • ScopePoints
+    //   • CompletedPoints
+    //
+    // Check for required columns:
     const requiredCols = ["EnterprisePriority", "AreaOfFocus", "AssetMPOID", "AssetName"];
-    const missing = requiredCols.filter(col => !Object.keys(jsonData[0] || {}).includes(col));
+    const missing = requiredCols.filter(
+      col => !Object.keys(jsonData[0] || {}).includes(col)
+    );
     if (missing.length) {
       alert("Missing required columns: " + missing.join(", "));
       return;
     }
 
-    // Build new arrays:
+    // Build new sets for EP and AOF
     const epSet = new Set();
     const aofSet = new Set();
     jsonData.forEach(row => {
       epSet.add(row.EnterprisePriority);
-      aofSet.add(row.AreaOfFocus + "||" + row.EnterprisePriority); 
-      // store "AOF||EP" so we can split later
+      aofSet.add(row.AreaOfFocus + "||" + row.EnterprisePriority);
     });
 
-    // Reconstruct enterprisePriorities
+    // New enterprisePriorities array
     const newEPs = Array.from(epSet).map(id => ({ id: id, name: id }));
-    // Reconstruct areasOfFocus
+
+    // New areasOfFocus array
     const newAOFs = Array.from(aofSet).map(key => {
       const [aofId, epId] = key.split("||");
       return { id: aofId, name: aofId, ep: epId };
     });
 
-    // Reconstruct assets
+    // New assets array
     const newAssets = jsonData.map(row => {
-      // Convert Excel date or string to ISO yyyy-mm-dd
-      let launch = "";
-      if (row.LaunchDate) {
-        if (typeof row.LaunchDate === "number") {
-          // Excel stores dates as numbers since 1900; use XLSX to convert
-          const dt = XLSX.SSF.parse_date_code(row.LaunchDate);
-          launch = `${dt.y}-${String(dt.m).padStart(2, "0")}-${String(dt.d).padStart(2, "0")}`;
-        } else if (typeof row.LaunchDate === "string") {
-          launch = row.LaunchDate;
-        }
-      }
-      const budgetVal = Number(row.TotalEstimatedCost) || 0;
-      const scopeTotal = Number(row.ScopePoints) || 0;
-      const scopeDone = Number(row.CompletedPoints) || 0;
+      // Parse date fields (if number ⇒ excel serial, else string)
+      const startVal = parseDateField(row.StartDate);
+      // If LaunchDate is provided, use that as 'end'; otherwise, fall back to StartDate
+      const launchVal = parseDateField(row.LaunchDate);
+      const endVal = launchVal || startVal;
+
+      // Other optional date fields
+      const artDate = parseDateField(row.ARTApprovalDate);
+      const steerCoDate = parseDateField(row.SteerCoApprovalDate);
 
       return {
         aof: row.AreaOfFocus,
         name: row.AssetName,
         mpoid: row.AssetMPOID,
+        initiative: row.Initiative || "",
         owner: row.Owner || "",
-        start: launch || "",
-        end: launch || "",        // set same as launch if no explicit end
-        spent: 0,                 // default 0 (user can edit later)
-        budget: budgetVal,
-        completedPoints: scopeDone,
-        totalPoints: scopeTotal,
+        start: startVal || "",
+        end: endVal || "",
+        ARTApprovalDate: artDate,
+        SteerCoApprovalDate: steerCoDate,
+        spent: 0,
+        budget: Number(row.TotalEstimatedCost) || 0,
+        completedPoints: Number(row.CompletedPoints) || 0,
+        totalPoints: Number(row.ScopePoints) || 0,
         details: row.Description || "",
         pillar: row.Pillar || "",
         tpm: row.TPM || "",
@@ -491,14 +611,14 @@ function parseExcelFile(file) {
       };
     });
 
-    // Override global config:
+    // Override global config
     config = {
       enterprisePriorities: newEPs,
       areasOfFocus: newAOFs,
       assets: newAssets
     };
 
-    // Reset owners/filter
+    // Reset owner filter
     selectedOwners = [];
     document.getElementById("ownerSelectAll").checked = false;
     updateOwnerButtonLabel();
@@ -521,7 +641,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Search input
   const searchInput = document.getElementById("assetSearch");
-  searchInput.addEventListener("input", (e) => {
+  searchInput.addEventListener("input", e => {
     searchTerm = e.target.value.trim();
     render();
   });
@@ -532,7 +652,7 @@ window.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", toggleOwnerDropdown);
 
   // Select All checkbox
-  document.getElementById("ownerSelectAll").addEventListener("change", (e) => {
+  document.getElementById("ownerSelectAll").addEventListener("change", e => {
     const checkboxes = document.querySelectorAll(".owner-checkbox");
     selectedOwners = [];
     if (e.target.checked) {
@@ -554,13 +674,13 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", closeOwnerDropdownOnClickOutside);
 
   // Upload button ⇒ trigger file input
-  document.getElementById("uploadButton").addEventListener("click", (e) => {
+  document.getElementById("uploadButton").addEventListener("click", e => {
     e.preventDefault();
     document.getElementById("excelInput").click();
   });
 
   // File input change ⇒ parse Excel
-  document.getElementById("excelInput").addEventListener("change", (e) => {
+  document.getElementById("excelInput").addEventListener("change", e => {
     const file = e.target.files[0];
     if (file) {
       parseExcelFile(file);
