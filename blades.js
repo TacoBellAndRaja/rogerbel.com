@@ -392,38 +392,13 @@ function render() {
       .sort((a, b) => a.name.localeCompare(b.name));
     assets.forEach(asset => {
       const percs = calculatePercentages(asset);
-      const statusClass = getStatusColorClass(percs);
-
-      const statusDot = document.createElement("div");
-      statusDot.className = `status-indicator ${statusClass}`;
-
-      const statusBarCon = document.createElement("div");
-      statusBarCon.className = "status-bar-container";
-
-      const budgetIcon = document.createElement("span");
-      budgetIcon.className = "icon budget";
-      budgetIcon.textContent = "💲";
-      budgetIcon.style.left = `${percs.budget}%`;
-      statusBarCon.appendChild(budgetIcon);
-
-      const timeIcon = document.createElement("span");
-      timeIcon.className = "icon time";
-      timeIcon.textContent = "⏰";
-      timeIcon.style.left = `${percs.time}%`;
-      statusBarCon.appendChild(timeIcon);
-
-      const scopeIcon = document.createElement("span");
-      scopeIcon.className = "icon scope";
-      scopeIcon.textContent = "🔨";
-      scopeIcon.style.left = `${percs.scope}%`;
-      statusBarCon.appendChild(scopeIcon);
 
       const card = document.createElement("div");
       card.className = "asset-card";
       card.dataset.assetId = asset.name;
       if (asset.name === selectedAssetId) card.classList.add("selected");
-      card.appendChild(statusDot);
 
+      // Asset header and owner
       const header = document.createElement("div");
       header.className = "asset-header";
       header.textContent = asset.name;
@@ -432,7 +407,38 @@ function render() {
       ownerSpan.textContent = `Owner: ${asset.owner}`;
       card.appendChild(header);
       card.appendChild(ownerSpan);
-      card.appendChild(statusBarCon);
+
+      // --- Three separate status bars ---
+
+      // 1) Time bar
+      const timeBar = document.createElement("div");
+      timeBar.className = "status-bar";
+      const timeFill = document.createElement("div");
+      timeFill.className = "status-fill time-fill";
+      timeFill.style.width = percs.time + "%";
+      timeFill.textContent = percs.time + "%";
+      timeBar.appendChild(timeFill);
+      card.appendChild(timeBar);
+
+      // 2) Budget bar
+      const budgetBar = document.createElement("div");
+      budgetBar.className = "status-bar";
+      const budgetFill = document.createElement("div");
+      budgetFill.className = "status-fill budget-fill";
+      budgetFill.style.width = percs.budget + "%";
+      budgetFill.textContent = percs.budget + "%";
+      budgetBar.appendChild(budgetFill);
+      card.appendChild(budgetBar);
+
+      // 3) Scope bar
+      const scopeBar = document.createElement("div");
+      scopeBar.className = "status-bar";
+      const scopeFill = document.createElement("div");
+      scopeFill.className = "status-fill scope-fill";
+      scopeFill.style.width = percs.scope + "%";
+      scopeFill.textContent = percs.scope + "%";
+      scopeBar.appendChild(scopeFill);
+      card.appendChild(scopeBar);
 
       colDiv.appendChild(card);
     });
@@ -464,7 +470,9 @@ function selectAsset(assetId) {
     <p><strong>ART Approval:</strong> ${asset.ARTApprovalDate || ""}</p>
     <p><strong>SteerCo Approval:</strong> ${asset.SteerCoApprovalDate || ""}</p>
     <p><strong>Total Est. Cost:</strong> $${(asset.budget || 0).toLocaleString()}</p>
-    <p><strong>Scope:</strong> ${asset.completedPoints || 0} / ${asset.totalPoints || 0} story points</p>
+    <p><strong>Scope:</strong> ${asset.completedPoints || 0} / ${
+    asset.totalPoints || 0
+  } story points</p>
     <hr>
     <p><strong>Initiative:</strong> ${asset.initiative || ""}</p>
     <p><strong>Pillar:</strong> ${asset.pillar || ""}</p>
@@ -497,10 +505,7 @@ function toggleOwnerDropdown() {
 function closeOwnerDropdownOnClickOutside(event) {
   const button = document.getElementById("ownerDropdownButton");
   const menu = document.getElementById("ownerDropdownMenu");
-  if (
-    !button.contains(event.target) &&
-    !menu.contains(event.target)
-  ) {
+  if (!button.contains(event.target) && !menu.contains(event.target)) {
     menu.classList.remove("open");
   }
 }
@@ -523,7 +528,7 @@ function updateOwnerButtonLabel() {
 // ------------------------------------------------
 function parseExcelFile(file) {
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function (e) {
     const data = new Uint8Array(e.target.result);
     const workbook = XLSX.read(data, { type: "array" });
     const firstSheetName = workbook.SheetNames[0];
@@ -552,9 +557,14 @@ function parseExcelFile(file) {
     //   • CompletedPoints
     //
     // Check for required columns:
-    const requiredCols = ["EnterprisePriority", "AreaOfFocus", "AssetMPOID", "AssetName"];
+    const requiredCols = [
+      "EnterprisePriority",
+      "AreaOfFocus",
+      "AssetMPOID",
+      "AssetName"
+    ];
     const missing = requiredCols.filter(
-      col => !Object.keys(jsonData[0] || {}).includes(col)
+      (col) => !Object.keys(jsonData[0] || {}).includes(col)
     );
     if (missing.length) {
       alert("Missing required columns: " + missing.join(", "));
@@ -564,29 +574,26 @@ function parseExcelFile(file) {
     // Build new sets for EP and AOF
     const epSet = new Set();
     const aofSet = new Set();
-    jsonData.forEach(row => {
+    jsonData.forEach((row) => {
       epSet.add(row.EnterprisePriority);
       aofSet.add(row.AreaOfFocus + "||" + row.EnterprisePriority);
     });
 
     // New enterprisePriorities array
-    const newEPs = Array.from(epSet).map(id => ({ id: id, name: id }));
+    const newEPs = Array.from(epSet).map((id) => ({ id: id, name: id }));
 
     // New areasOfFocus array
-    const newAOFs = Array.from(aofSet).map(key => {
+    const newAOFs = Array.from(aofSet).map((key) => {
       const [aofId, epId] = key.split("||");
       return { id: aofId, name: aofId, ep: epId };
     });
 
     // New assets array
-    const newAssets = jsonData.map(row => {
-      // Parse date fields (if number ⇒ excel serial, else string)
+    const newAssets = jsonData.map((row) => {
+      // Parse date fields (number ⇒ excel serial, else string)
       const startVal = parseDateField(row.StartDate);
-      // If LaunchDate is provided, use that as 'end'; otherwise, fall back to StartDate
       const launchVal = parseDateField(row.LaunchDate);
       const endVal = launchVal || startVal;
-
-      // Other optional date fields
       const artDate = parseDateField(row.ARTApprovalDate);
       const steerCoDate = parseDateField(row.SteerCoApprovalDate);
 
@@ -641,7 +648,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Search input
   const searchInput = document.getElementById("assetSearch");
-  searchInput.addEventListener("input", e => {
+  searchInput.addEventListener("input", (e) => {
     searchTerm = e.target.value.trim();
     render();
   });
@@ -652,16 +659,16 @@ window.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", toggleOwnerDropdown);
 
   // Select All checkbox
-  document.getElementById("ownerSelectAll").addEventListener("change", e => {
+  document.getElementById("ownerSelectAll").addEventListener("change", (e) => {
     const checkboxes = document.querySelectorAll(".owner-checkbox");
     selectedOwners = [];
     if (e.target.checked) {
-      checkboxes.forEach(cb => {
+      checkboxes.forEach((cb) => {
         cb.checked = true;
         selectedOwners.push(cb.value);
       });
     } else {
-      checkboxes.forEach(cb => {
+      checkboxes.forEach((cb) => {
         cb.checked = false;
       });
       selectedOwners = [];
@@ -674,13 +681,13 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", closeOwnerDropdownOnClickOutside);
 
   // Upload button ⇒ trigger file input
-  document.getElementById("uploadButton").addEventListener("click", e => {
+  document.getElementById("uploadButton").addEventListener("click", (e) => {
     e.preventDefault();
     document.getElementById("excelInput").click();
   });
 
   // File input change ⇒ parse Excel
-  document.getElementById("excelInput").addEventListener("change", e => {
+  document.getElementById("excelInput").addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (file) {
       parseExcelFile(file);
