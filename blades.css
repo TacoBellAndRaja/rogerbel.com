@@ -228,7 +228,6 @@ header h1 {
   z-index: 10;
   padding-left: var(--gap);
   padding-right: var(--gap);
-  /* We don’t enforce nowrap here—cells will wrap on their own */
   overflow-x: hidden;
 }
 
@@ -249,13 +248,13 @@ header h1 {
 /* -------------------------------
    EP Row (only top corners rounded)
    • allow wrapping
-   • slightly smaller font (95% of var)
+   • slightly reduced font size (95%)
 ------------------------------- */
 #epRow {
   display: grid;
   gap: var(--gap);
   width: 100%;
-  align-items: stretch; /* stretch all cells to same height */
+  align-items: stretch; /* each cell matches tallest */
 }
 .ep {
   background: var(--primary-blue);
@@ -266,9 +265,9 @@ header h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* reduced by 5%: */
+  /* reduce by 5% */
   font-size: calc(var(--ep-font-size) * 0.95);
-  /* allow wrapping within cell: */
+  /* allow wrapping */
   white-space: normal;
   word-break: break-word;
   line-height: 1.2;
@@ -277,7 +276,7 @@ header h1 {
 /* -------------------------------
    EP Summary Row (only bottom corners rounded, darker)
    • allow wrapping
-   • slightly smaller font
+   • slightly reduced font size
 ------------------------------- */
 #epSummaryRow {
   display: grid;
@@ -288,29 +287,29 @@ header h1 {
   background: #bdd8ff;
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   padding: 4px 8px;
-  /* reduced by 5%: */
+  /* reduce by 5% */
   font-size: calc(var(--summary-font-size) * 0.95);
   text-align: center;
-  /* allow wrapping: */
+  /* allow wrapping */
   white-space: normal;
   word-break: break-word;
   line-height: 1.2;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: auto; /* height will be determined by content (max across row) */
+  height: auto; /* determined by content */
 }
 
 /* -------------------------------
-   AOF Row (only top corners)
+   AOF Row (only top corners rounded)
    • allow wrapping
-   • slightly smaller font
+   • slightly reduced font size
 ------------------------------- */
 #aofRow {
   display: grid;
   gap: var(--gap);
   width: 100%;
-  align-items: stretch; /* stretch all cells to same height */
+  align-items: stretch; /* each cell matches tallest */
 }
 .aof {
   background: var(--accent-blue);
@@ -321,18 +320,18 @@ header h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* reduced by 5%: */
+  /* reduce by 5% */
   font-size: calc(var(--aof-font-size) * 0.95);
-  /* allow wrapping: */
+  /* allow wrapping */
   white-space: normal;
   word-break: break-word;
   line-height: 1.2;
 }
 
 /* -------------------------------
-   AOF Summary Row (only bottom corners, darker)
+   AOF Summary Row (only bottom corners rounded, darker)
    • allow wrapping
-   • slightly smaller font
+   • slightly reduced font size
 ------------------------------- */
 #aofSummaryRow {
   display: grid;
@@ -343,17 +342,17 @@ header h1 {
   background: #a3d6c4;
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   padding: 4px 6px;
-  /* reduced by 5%: */
+  /* reduce by 5% */
   font-size: calc(var(--summary-font-size) * 0.95);
   text-align: center;
-  /* allow wrapping: */
+  /* allow wrapping */
   white-space: normal;
   word-break: break-word;
   line-height: 1.2;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: auto; /* height determined by tallest in row */
+  height: auto; /* determined by content */
 }
 
 /* -------------------------------
@@ -379,37 +378,42 @@ header h1 {
 }
 
 /* -------------------------------
-   Status Bar with Icons & Dot
+   Status Bars (three per asset card)
 ------------------------------- */
-.status-bar-container {
-  position: relative;
+.status-bar {
   background: #eee;
   border-radius: var(--border-radius);
-  height: 20px;
-  margin-top: 6px;
-}
-.status-bar-container .icon {
-  position: absolute;
-  top: -4px;
-  transform: translateX(-50%);
-  font-size: 1rem;
-}
-.icon.budget { color: #2ecc71; }
-.icon.time   { color: #f1c40f; }
-.icon.scope  { color: #e67e22; }
-
-.status-indicator {
-  width: 12px;
   height: 12px;
-  border-radius: 50%;
-  position: absolute;
-  top: 8px;
-  right: 8px;
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  position: relative;
 }
-.status-safe    { background: var(--safe-green); }
-.status-caution { background: var(--caution-yellow); }
-.status-warning { background: var(--warning-orange); }
-.status-danger  { background: var(--danger-red); }
+.status-fill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+/* Time bar fill color (use caution-yellow) */
+.time-fill {
+  background: var(--caution-yellow);
+  color: #333;
+}
+/* Budget bar fill color (use safe-green) */
+.budget-fill {
+  background: var(--safe-green);
+  color: white;
+}
+/* Scope bar fill color (use accent-blue) */
+.scope-fill {
+  background: var(--accent-blue);
+  color: white;
+}
 
 /* -------------------------------
    Asset Card
