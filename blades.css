@@ -228,6 +228,8 @@ header h1 {
   z-index: 10;
   padding-left: var(--gap);
   padding-right: var(--gap);
+  /* Ensure no wrapping and allow content to shrink: */
+  overflow-x: hidden;
 }
 
 /* Spacing adjustments */
@@ -253,6 +255,7 @@ header h1 {
   width: 100%;
   align-items: center;
 }
+/* Force each EP cell onto one line (no wrap): */
 .ep {
   background: var(--primary-blue);
   color: white;
@@ -265,7 +268,8 @@ header h1 {
   font-size: var(--ep-font-size);
   height: 48px;
   overflow: hidden;
-  white-space: normal;
+  white-space: nowrap;          /* ADDED */
+  text-overflow: ellipsis;      /* ADDED */
   line-height: 1.2;
 }
 
@@ -284,8 +288,8 @@ header h1 {
   font-size: var(--summary-font-size);
   text-align: center;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  white-space: nowrap;          /* ADDED */
+  text-overflow: ellipsis;      /* ADDED */
   line-height: 1.2;
   display: flex;
   align-items: center;
@@ -302,6 +306,7 @@ header h1 {
   width: 100%;
   align-items: center;
 }
+/* Force each AOF cell onto one line (no wrap): */
 .aof {
   background: var(--accent-blue);
   color: white;
@@ -314,7 +319,8 @@ header h1 {
   font-size: var(--aof-font-size);
   height: 44px;
   overflow: hidden;
-  white-space: normal;
+  white-space: nowrap;          /* ADDED */
+  text-overflow: ellipsis;      /* ADDED */
   line-height: 1.2;
 }
 
@@ -333,8 +339,8 @@ header h1 {
   font-size: var(--summary-font-size);
   text-align: center;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  white-space: nowrap;          /* ADDED */
+  text-overflow: ellipsis;      /* ADDED */
   line-height: 1.2;
   display: flex;
   align-items: center;
