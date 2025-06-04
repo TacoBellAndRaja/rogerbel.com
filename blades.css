@@ -18,8 +18,8 @@
   --blade-width: 320px;
   --sidebar-width: 50px;
   --header-height: 48px;
-  --ep-font-size: 15px;
-  --aof-font-size: 13px;
+  --ep-font-size: 15px;       /* Base—JS will override */
+  --aof-font-size: 13px;      /* Base—JS will override */
   --summary-font-size: 12px;
 }
 * {
@@ -228,7 +228,7 @@ header h1 {
   z-index: 10;
   padding-left: var(--gap);
   padding-right: var(--gap);
-  /* Ensure no wrapping and allow content to shrink: */
+  /* We don’t enforce nowrap here—cells will wrap on their own */
   overflow-x: hidden;
 }
 
@@ -248,33 +248,36 @@ header h1 {
 
 /* -------------------------------
    EP Row (only top corners rounded)
+   • allow wrapping
+   • slightly smaller font (95% of var)
 ------------------------------- */
 #epRow {
   display: grid;
   gap: var(--gap);
   width: 100%;
-  align-items: center;
+  align-items: stretch; /* stretch all cells to same height */
 }
-/* Force each EP cell onto one line (no wrap): */
 .ep {
   background: var(--primary-blue);
   color: white;
-  padding: 0 8px;
+  padding: 8px;
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--ep-font-size);
-  height: 48px;
-  overflow: hidden;
-  white-space: nowrap;          /* ADDED */
-  text-overflow: ellipsis;      /* ADDED */
+  /* reduced by 5%: */
+  font-size: calc(var(--ep-font-size) * 0.95);
+  /* allow wrapping within cell: */
+  white-space: normal;
+  word-break: break-word;
   line-height: 1.2;
 }
 
 /* -------------------------------
    EP Summary Row (only bottom corners rounded, darker)
+   • allow wrapping
+   • slightly smaller font
 ------------------------------- */
 #epSummaryRow {
   display: grid;
@@ -285,47 +288,51 @@ header h1 {
   background: #bdd8ff;
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   padding: 4px 8px;
-  font-size: var(--summary-font-size);
+  /* reduced by 5%: */
+  font-size: calc(var(--summary-font-size) * 0.95);
   text-align: center;
-  overflow: hidden;
-  white-space: nowrap;          /* ADDED */
-  text-overflow: ellipsis;      /* ADDED */
+  /* allow wrapping: */
+  white-space: normal;
+  word-break: break-word;
   line-height: 1.2;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 28px;
+  height: auto; /* height will be determined by content (max across row) */
 }
 
 /* -------------------------------
    AOF Row (only top corners)
+   • allow wrapping
+   • slightly smaller font
 ------------------------------- */
 #aofRow {
   display: grid;
   gap: var(--gap);
   width: 100%;
-  align-items: center;
+  align-items: stretch; /* stretch all cells to same height */
 }
-/* Force each AOF cell onto one line (no wrap): */
 .aof {
   background: var(--accent-blue);
   color: white;
-  padding: 0 6px;
+  padding: 6px;
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--aof-font-size);
-  height: 44px;
-  overflow: hidden;
-  white-space: nowrap;          /* ADDED */
-  text-overflow: ellipsis;      /* ADDED */
+  /* reduced by 5%: */
+  font-size: calc(var(--aof-font-size) * 0.95);
+  /* allow wrapping: */
+  white-space: normal;
+  word-break: break-word;
   line-height: 1.2;
 }
 
 /* -------------------------------
    AOF Summary Row (only bottom corners, darker)
+   • allow wrapping
+   • slightly smaller font
 ------------------------------- */
 #aofSummaryRow {
   display: grid;
@@ -336,16 +343,17 @@ header h1 {
   background: #a3d6c4;
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   padding: 4px 6px;
-  font-size: var(--summary-font-size);
+  /* reduced by 5%: */
+  font-size: calc(var(--summary-font-size) * 0.95);
   text-align: center;
-  overflow: hidden;
-  white-space: nowrap;          /* ADDED */
-  text-overflow: ellipsis;      /* ADDED */
+  /* allow wrapping: */
+  white-space: normal;
+  word-break: break-word;
   line-height: 1.2;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 26px;
+  height: auto; /* height determined by tallest in row */
 }
 
 /* -------------------------------
