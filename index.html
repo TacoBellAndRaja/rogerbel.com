@@ -5,77 +5,183 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Cool Site</title>
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ----------------------------------------
+       Login Overlay Styles
+    ---------------------------------------- */
+    #loginOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #loginBox {
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 320px;
+      width: 90%;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    #loginBox h2 {
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+      color: #333;
+    }
+    #loginBox input[type="password"] {
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    #loginBox button {
+      padding: 8px 16px;
+      font-size: 1rem;
+      background: #004080;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #loginBox button:hover {
+      background: #003366;
+    }
+    #loginError {
+      margin-top: 8px;
+      color: #e74c3c;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    /* ----------------------------------------
+       Hide main site until password is correct
+    ---------------------------------------- */
+    #siteContent {
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Header / Navbar -->
-  <header>
-    <div class="logo">My Cool Site</div>
-    <nav>
-      <a href="#games">Games</a>
-      <a href="recipes.html">Recipes</a>
-    </nav>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Welcome to My Cool Site</h1>
-    <p>Discover fun, silly games and mouth-watering recipes—all in one place. Click below to get started!</p>
-    <div class="cta">
-      <a href="#games" class="btn btn-games">Games</a>
-      <a href="recipes.html" class="btn btn-recipes">Recipes</a>
+  <!-- ------------ LOGIN OVERLAY ------------ -->
+  <div id="loginOverlay">
+    <div id="loginBox">
+      <h2>Enter Password</h2>
+      <input type="password" id="passwordInput" placeholder="Password" />
+      <button id="passwordSubmit">Submit</button>
+      <p id="loginError">Incorrect password. Try again.</p>
     </div>
-  </section>
+  </div>
 
-  <!-- Games Section (Card Grid) -->
-  <section id="games" class="sections">
-    <!-- Card: Guess a Number -->
-    <div class="card">
-      <div class="card-icon">🎲</div>
-      <div class="card-content">
-        <h3>Chloe & Roo Game</h3>
-        <p>Candy! Flying! Ocean!</p>
-        <a href="game1.html">Play Now</a>
+  <!-- ------------ ACTUAL SITE CONTENT ------------ -->
+  <div id="siteContent">
+    <!-- Header / Navbar -->
+    <header>
+      <div class="logo">My Cool Site</div>
+      <nav>
+        <a href="#games">Games</a>
+        <a href="recipes.html">Recipes</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Welcome to My Cool Site</h1>
+      <p>Discover fun, silly games and mouth-watering recipes—all in one place. Click below to get started!</p>
+      <div class="cta">
+        <a href="#games" class="btn btn-games">Games</a>
+        <a href="recipes.html" class="btn btn-recipes">Recipes</a>
       </div>
-    </div>
+    </section>
 
-     <!-- Games Section (Card Grid) -->
-  <section id="games" class="sections">
-    <!-- Card: Guess a Number -->
-    <div class="card">
-      <div class="card-icon">🎲</div>
-      <div class="card-content">
-        <h3>Blades</h3>
-        <p>Blades prototype</p>
-        <a href="blades.html">Play Now</a>
+    <!-- Games Section (Card Grid) -->
+    <section id="games" class="sections">
+      <!-- Card: Chloe & Roo Game -->
+      <div class="card">
+        <div class="card-icon">🎲</div>
+        <div class="card-content">
+          <h3>Chloe &amp; Roo Game</h3>
+          <p>Candy! Flying! Ocean!</p>
+          <a href="game1.html">Play Now</a>
+        </div>
       </div>
-    </div>
 
-    <!-- Card: Rock-Paper-Scissors -->
-    <div class="card">
-      <div class="card-icon">✊</div>
-      <div class="card-content">
-        <h3>Rock-Paper-Scissors</h3>
-        <p>Classic showdown—pick rock, paper, or scissors and face off against the computer.</p>
-        <a href="game2.html">Play Now</a>
+      <!-- Card: Blades -->
+      <div class="card">
+        <div class="card-icon">🎲</div>
+        <div class="card-content">
+          <h3>Blades</h3>
+          <p>Blades prototype</p>
+          <a href="blades.html">Play Now</a>
+        </div>
       </div>
-    </div>
 
-    <!-- Card: Color Changer -->
-    <div class="card">
-      <div class="card-icon">🎨</div>
-      <div class="card-content">
-        <h3>Color Changer</h3>
-        <p>Click a button to instantly shift the page's background to a random color.</p>
-        <a href="game3.html">Play Now</a>
+      <!-- Card: Rock-Paper-Scissors -->
+      <div class="card">
+        <div class="card-icon">✊</div>
+        <div class="card-content">
+          <h3>Rock-Paper-Scissors</h3>
+          <p>Classic showdown—pick rock, paper, or scissors and face off against the computer.</p>
+          <a href="game2.html">Play Now</a>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>© 2025 My Cool Site. All Rights Reserved.</p>
-  </footer>
+      <!-- Card: Color Changer -->
+      <div class="card">
+        <div class="card-icon">🎨</div>
+        <div class="card-content">
+          <h3>Color Changer</h3>
+          <p>Click a button to instantly shift the page's background to a random color.</p>
+          <a href="game3.html">Play Now</a>
+        </div>
+      </div>
+    </section>
 
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2025 My Cool Site. All Rights Reserved.</p>
+    </footer>
+  </div>
+  <!-- /#siteContent -->
+
+
+  <!-- ------------ CLIENT‐SIDE PASSWORD SCRIPT ------------ -->
+  <script>
+    // === CHANGE THIS to whatever password you want ===
+    const CORRECT_PASSWORD = "assword";
+
+    const overlay = document.getElementById("loginOverlay");
+    const input   = document.getElementById("passwordInput");
+    const btn     = document.getElementById("passwordSubmit");
+    const errorP  = document.getElementById("loginError");
+    const site    = document.getElementById("siteContent");
+
+    btn.addEventListener("click", () => {
+      const val = input.value.trim();
+      if (val === CORRECT_PASSWORD) {
+        overlay.style.display = "none";
+        site.style.display = "block";
+      } else {
+        errorP.style.display = "block";
+      }
+    });
+
+    // Also allow hitting Enter to submit
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        btn.click();
+      }
+    });
+  </script>
 </body>
 </html>
