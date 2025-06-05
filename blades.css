@@ -3,11 +3,13 @@
 ------------------------------- */
 :root {
   --header-blue: #004080;      /* Top banner */
-  --primary-blue: #0055A4;     /* EP row */
-  --accent-blue: #1E90FF;      /* AOF row */
-  --dark-blue: #003f7f;        /* Sidebar */
+  --company-dark: #002f3e;     /* Company Mission row */
+  --team-medium: #004d61;      /* Team Mission row */
+  --ep-color: #0055A4;         /* EP row */
+  --aof-bg: #ffffff;           /* AOF row background */
   --light-bg: #f5f5f5;
   --text-dark: #333;
+  --mission-text: #ffffff;     /* White text over dark backgrounds */
   --card-bg: #ffffff;
   --border-radius: 4px;
   --gap: 8px;
@@ -22,6 +24,64 @@
   --aof-font-size: 13px;      /* Base—JS will override */
   --summary-font-size: 12px;
 }
+
+/* ----------------------------------------
+   “Sample Mode” (overlay + lightened boxes)
+---------------------------------------- */
+body.sample-mode .ep {
+  background: rgba(0, 85, 164, 0.3); /* lighten EP color */
+}
+body.sample-mode .aof {
+  background: rgba(255, 255, 255, 0.8); /* lightly translucent */
+}
+body.sample-mode .asset-card {
+  background: rgba(255,255,255,0.6); /* translucent */
+}
+body.sample-mode .mission-row {
+  opacity: 0.6;
+}
+
+#overlay {
+  position: fixed;
+  top: var(--header-height);
+  left: var(--sidebar-width);
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1005;
+  text-align: center;
+  padding: 16px;
+}
+#overlayContent {
+  max-width: 600px;
+}
+#overlay pre {
+  text-align: left;
+  background: #f0f0f0;
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+#copyHeadersBtn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--header-blue);
+  color: white;
+  cursor: pointer;
+}
+#copyHeadersBtn:hover {
+  background: var(--ep-color);
+}
+
+/* ----------------------------------------
+   Global Reset
+---------------------------------------- */
 * {
   margin: 0;
   padding: 0;
@@ -43,7 +103,7 @@ body {
   left: 0;
   width: var(--sidebar-width);
   height: calc(100% - var(--header-height));
-  background: var(--dark-blue);
+  background: var(--text-dark);
   color: white;
   display: flex;
   flex-direction: column;
@@ -120,12 +180,12 @@ header h1 {
   justify-self: center;
 }
 .search-container input {
-  padding: 6px 8px;
+  padding: 8px 12px;
   border-radius: var(--border-radius);
   border: none;
-  font-size: 0.9rem;
-  font-style: italic;
-  width: 200px;
+  font-size: 1rem;
+  width: 400px;                        
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 /* -------------------------------
@@ -148,7 +208,7 @@ header h1 {
   font-style: italic;
   cursor: pointer;
   white-space: nowrap;
-  width: 160px;           /* fixed width */
+  width: 160px;           
   text-overflow: ellipsis;
   overflow: hidden;
 }
@@ -168,7 +228,7 @@ header h1 {
   background: white;
   border-radius: var(--border-radius);
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  width: 160px;           /* same fixed width */
+  width: 160px;           
   max-height: 240px;
   overflow-y: auto;
   display: none;
@@ -185,7 +245,6 @@ header h1 {
   font-size: 0.9rem;
   color: var(--text-dark);
 }
-/* Add spacing between checkbox and label text: */
 .dropdown-item input {
   margin-right: 6px;
 }
@@ -217,67 +276,77 @@ header h1 {
 }
 
 /* -------------------------------
-   Header Rows Container: fixed
+   Header Rows Container
 ------------------------------- */
 #headerRows {
   flex: 0 0 auto;
   background: var(--light-bg);
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   margin-top: var(--gap);
-  padding-bottom: var(--gap);
+  padding: var(--gap);      /* now uses same padding on all sides */
   z-index: 10;
-  padding-left: var(--gap);
-  padding-right: var(--gap);
   overflow-x: hidden;
 }
 
-/* Spacing adjustments */
-#epRow {
-  margin-bottom: 0;
+/* ---------------------------------------
+   Mission Rows (Company & Team)
+--------------------------------------- */
+.mission-row {
+  padding: 8px 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
 }
-#epSummaryRow {
-  margin-bottom: var(--gap);
+/* Company Mission Row */
+#companyMissionRow {
+  background: var(--company-dark);
+  color: var(--mission-text);
+  margin-bottom: 8px;  /* small gap after Company before Team */
 }
-#aofRow {
-  margin-bottom: 0;
-}
-#aofSummaryRow {
-  margin-bottom: var(--gap);
+/* Team Mission Row */
+#teamMissionRow {
+  background: var(--team-medium);
+  color: var(--mission-text);
+  margin-bottom: 8px;  /* small gap after Team before EPs */
 }
 
 /* -------------------------------
-   EP Row (only top corners rounded)
-   • allow wrapping
-   • slightly reduced font size (95%)
+   EP Row
+   • no extra gap above/below EP vs. EP-summary
+   • use minmax(0,1fr) for each column (set in JS)
 ------------------------------- */
 #epRow {
-  display: grid;
+  display: grid;          
   gap: var(--gap);
   width: 100%;
-  align-items: stretch; /* each cell matches tallest */
+  align-items: stretch;   
+  /* grid-template-columns will be set in JS */
 }
 .ep {
-  background: var(--primary-blue);
-  color: white;
+  background: var(--ep-color);
+  color: var(--mission-text);
   padding: 8px;
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   font-weight: bold;
+
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* reduce by 5% */
-  font-size: calc(var(--ep-font-size) * 0.95);
-  /* allow wrapping */
+
+  text-align: center;
   white-space: normal;
+  overflow-wrap: anywhere;
   word-break: break-word;
-  line-height: 1.2;
+
+  min-width: 0;
 }
 
-/* -------------------------------
-   EP Summary Row (only bottom corners rounded, darker)
-   • allow wrapping
-   • slightly reduced font size
-------------------------------- */
+/* --------------------------------
+   EP summary (immediately below EP row)
+   • no extra vertical gap here
+-------------------------------- */
 #epSummaryRow {
   display: grid;
   gap: var(--gap);
@@ -287,94 +356,161 @@ header h1 {
   background: #bdd8ff;
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   padding: 4px 8px;
-  /* reduce by 5% */
-  font-size: calc(var(--summary-font-size) * 0.95);
-  text-align: center;
-  /* allow wrapping */
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.2;
+
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: auto; /* determined by content */
+
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+
+  min-width: 0;
+}
+
+/* ----------------------------------------------------
+   Add a small gap below EP-summary before AOF row:
+   (optional—remove if you want them flush)
+---------------------------------------------------- */
+#epSummaryRow {
+  margin-bottom: 8px;
 }
 
 /* -------------------------------
-   AOF Row (only top corners rounded)
-   • allow wrapping
-   • slightly reduced font size
+   AOF Row
+   • no extra gap above/below AOF vs. AOF-summary
 ------------------------------- */
 #aofRow {
   display: grid;
   gap: var(--gap);
   width: 100%;
-  align-items: stretch; /* each cell matches tallest */
+  align-items: stretch;   
+  /* grid-template-columns will be set in JS */
 }
 .aof {
-  background: var(--accent-blue);
-  color: white;
+  background: var(--aof-bg);
+  color: black;
   padding: 6px;
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   font-weight: 600;
+
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* reduce by 5% */
-  font-size: calc(var(--aof-font-size) * 0.95);
-  /* allow wrapping */
+
+  text-align: center;
   white-space: normal;
+  overflow-wrap: anywhere;
   word-break: break-word;
-  line-height: 1.2;
+
+  min-width: 0;
 }
 
-/* -------------------------------
-   AOF Summary Row (only bottom corners rounded, darker)
-   • allow wrapping
-   • slightly reduced font size
-------------------------------- */
+/* --------------------------------
+   AOF summary (immediately below AOF row)
+   • no extra vertical gap here
+-------------------------------- */
 #aofSummaryRow {
   display: grid;
   gap: var(--gap);
   width: 100%;
 }
 .aof-summary {
-  background: #a3d6c4;
+  background: #eaeaea;
+  color: black;
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   padding: 4px 6px;
-  /* reduce by 5% */
-  font-size: calc(var(--summary-font-size) * 0.95);
-  text-align: center;
-  /* allow wrapping */
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.2;
+
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: auto; /* determined by content */
+
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+
+  min-width: 0;
+}
+
+/* ----------------------------------------------------
+   Add a small gap below AOF-summary before Assets:
+   (optional—remove if you want them flush)
+---------------------------------------------------- */
+#aofSummaryRow {
+  margin-bottom: 8px;
 }
 
 /* -------------------------------
    Assets Area (scrollable)
+   • matches headerRows padding
 ------------------------------- */
 #assetsArea {
   flex: 1 1 auto;
   overflow-y: auto;
-  padding-top: var(--gap);
+  padding: var(--gap);      /* same padding as headerRows */
 }
 #assetsGrid {
   display: grid;
   gap: var(--gap);
   width: 100%;
-  padding-left: var(--gap);
-  padding-right: var(--gap);
+  padding-left: 0;          /* no extra left padding */
+  padding-right: 0;         /* wrapper handles right padding */
 }
 .asset-col {
   display: flex;
   flex-direction: column;
   gap: var(--gap);
   min-width: 0;
+}
+
+/* -------------------------------
+   Asset Card
+------------------------------- */
+.asset-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 0;
+}
+.asset-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.asset-card.selected {
+  border: 2px solid var(--aof-bg);
+  background: #f0f8ff;
+}
+
+/* --------------------------------
+   Asset Name → wrap up to 3 lines + ellipsis
+-------------------------------- */
+.asset-header {
+  font-size: 0.9rem;  
+  font-weight: 600;
+  margin-bottom: 4px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;       /* limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;            /* show ellipsis after 3 lines */
+
+  text-align: center;
+}
+.asset-owner {
+  font-size: 0.85rem;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* -------------------------------
@@ -399,57 +535,20 @@ header h1 {
   line-height: 1;
   white-space: nowrap;
 }
-/* Time bar fill color (use caution-yellow) */
+/* Time bar fill color (caution-yellow) */
 .time-fill {
   background: var(--caution-yellow);
   color: #333;
 }
-/* Budget bar fill color (use safe-green) */
+/* Budget bar fill color (safe-green) */
 .budget-fill {
   background: var(--safe-green);
   color: white;
 }
-/* Scope bar fill color (use accent-blue) */
+/* Scope bar fill color (EP color) */
 .scope-fill {
-  background: var(--accent-blue);
+  background: var(--ep-color);
   color: white;
-}
-
-/* -------------------------------
-   Asset Card
-------------------------------- */
-.asset-card {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  padding: 12px;
-  position: relative;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-width: 0;
-}
-.asset-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-.asset-card.selected {
-  border: 2px solid var(--accent-blue);
-  background: #f0f8ff;
-}
-.asset-header {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.asset-owner {
-  font-size: 0.85rem;
-  color: #555;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* -------------------------------
@@ -473,7 +572,7 @@ header h1 {
   transform: translateX(0);
 }
 #blade .blade-header {
-  background: var(--primary-blue);
+  background: var(--ep-color);
   color: white;
   padding: 12px;
   font-size: 1.1rem;
@@ -517,7 +616,7 @@ footer {
     display: block;
   }
   #mainContent.shifted {
-    right: 0;
+    right: var(--blade-width) !important;
   }
   #blade {
     width: 100%;
