@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dependency Mapper</title>
+  <link rel="stylesheet" href="dependency.css" />
+</head>
+<body>
+  <div id="controls">
+    <input type="file" id="upload" accept=".xlsx,.xls" />
+  </div>
+  <svg id="graph"></svg>
+
+  <!-- D3 for force layout, SheetJS for Excel parsing -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="dependency.js"></script>
+</body>
+</html>
