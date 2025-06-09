@@ -1,0 +1,50 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: sans-serif;
+}
+
+#controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  background: rgba(255,255,255,0.9);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+#graph {
+  width: 100%;
+  height: 100%;
+  cursor: move;
+}
+
+.node rect {
+  stroke: #333;
+  stroke-width: 1.5px;
+  rx: 4px;
+  ry: 4px;
+}
+
+.node text {
+  pointer-events: none;
+  font-size: 10px;
+}
+
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+.link-marker {
+  fill: #666;
+}
+
+.link-label {
+  font-size: 9px;
+  fill: #333;
+}
