@@ -8,10 +8,39 @@
 <body>
   <div id="controls">
     <input type="file" id="upload" accept=".xlsx,.xls" />
-  </div>
-  <svg id="graph"></svg>
 
-  <!-- D3 for force layout, SheetJS for Excel parsing -->
+    <div class="multiselect">
+      <label>Driving Teams</label>
+      <div class="selectBox" tabindex="0" id="drivingBox">
+        <span id="drivingPlaceholder">Select all</span>
+        <div class="overSelect"></div>
+      </div>
+      <div class="checkboxes" id="drivingCheckboxes">
+        <div class="actions">
+          <a href="#" id="driveSelectAll">Select All</a> |
+          <a href="#" id="driveDeselectAll">Deselect All</a>
+        </div>
+        <!-- driving checkboxes injected here -->
+      </div>
+    </div>
+
+    <div class="multiselect">
+      <label>Dependent Teams</label>
+      <div class="selectBox" tabindex="0" id="dependentBox">
+        <span id="dependentPlaceholder">Select all</span>
+        <div class="overSelect"></div>
+      </div>
+      <div class="checkboxes" id="dependentCheckboxes">
+        <div class="actions">
+          <a href="#" id="depSelectAll">Select All</a> |
+          <a href="#" id="depDeselectAll">Deselect All</a>
+        </div>
+        <!-- dependent checkboxes injected here -->
+      </div>
+    </div>
+  </div>
+
+  <svg id="graph"></svg>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="dependency.js"></script>
