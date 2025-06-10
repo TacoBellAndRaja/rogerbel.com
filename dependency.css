@@ -1,44 +1,135 @@
-html, body { margin:0; padding:0; width:100%; height:100%; font-family:sans-serif; }
+/* dependency.css */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: sans-serif;
+}
+
 #controls {
-  position: absolute; top:10px; left:10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
   background: rgba(255,255,255,0.9);
-  padding:8px; border-radius:4px;
-  display:flex; gap:16px; align-items:flex-start;
-  z-index:10;
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  z-index: 10;
 }
-.multiselect { position:relative; }
+
+.multiselect { position: relative; }
+
 .selectBox {
-  display:flex; align-items:center;
-  border:1px solid #999; border-radius:4px;
-  padding:4px 8px; cursor:pointer;
-  background:#fff; min-width:160px; height:32px;
-  position:relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #999;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  background: #fff;
+  min-width: 160px;
+  height: 32px;
+  position: relative;
 }
-.selectBox:hover { background:#f0f0f0; }
+.selectBox:hover { background: #f0f0f0; }
 .selectBox::after {
-  content:''; position:absolute; right:8px; top:50%;
-  transform:translateY(-50%);
-  border-left:5px solid transparent;
-  border-right:5px solid transparent;
-  border-top:5px solid #333;
+  content: '';
+  position: absolute;
+  right: 8px; top: 50%;
+  transform: translateY(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #333;
 }
-.overSelect { position:absolute; top:0; left:0; right:0; bottom:0; }
+
+.overSelect { position: absolute; top:0; left:0; right:0; bottom:0; }
+
 .checkboxes {
-  display:none; position:absolute;
-  width:180px; background:#fff; border:1px solid #999;
-  border-radius:4px; padding:8px; margin-top:2px;
-  max-height:200px; overflow-y:auto;
-  box-shadow:0 2px 6px rgba(0,0,0,0.2);
-  z-index:5;
+  display: none;
+  position: absolute;
+  width: 180px;
+  background: #fff;
+  border: 1px solid #999;
+  border-radius: 4px;
+  padding: 8px;
+  margin-top: 2px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 5;
 }
-.checkboxes .actions { font-size:12px; margin-bottom:4px; }
-.checkboxes .actions a { text-decoration:none; color:#004080; cursor:pointer; margin:0 4px; }
-.checkboxes label { display:flex; align-items:center; font-size:12px; margin:2px 0; }
-.checkboxes input { margin-right:8px; }
-#graph { width:100%; height:100%; cursor:move; }
-.node rect { fill:#fff; stroke:#333; stroke-width:1.5px; rx:4px; ry:4px; }
-.node text.id { font-size:10px; }
-.node text.pillar { font-size:9px; font-style:italic; }
-.link { fill:none; stroke:#666; stroke-width:1.5px; }
-.link-marker { fill:#666; }
-.link-label { font-size:9px; fill:#333; }
+.checkboxes .actions {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.checkboxes .actions a {
+  text-decoration: none;
+  color: #004080;
+  cursor: pointer;
+  margin: 0 4px;
+}
+.checkboxes label {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin: 2px 0;
+}
+.checkboxes input {
+  margin-right: 8px;
+}
+
+#graph {
+  width: 100%;
+  height: 100%;
+  cursor: move;
+}
+
+/* nodes */
+.node rect {
+  fill: #fff;
+  stroke: #333;
+  stroke-width: 1.5px;
+  rx: 4px;
+  ry: 4px;
+}
+
+/* team-ID split into two lines */
+.node text.id tspan {
+  font-size: 10px;
+}
+.node text.id {
+  text-anchor: middle;
+}
+.node text.pillar {
+  font-size: 9px;
+  font-style: italic;
+  text-anchor: middle;
+}
+
+/* make the links blue */
+.link {
+  fill: none;
+  stroke: #004080;
+  stroke-width: 1.5px;
+}
+.link-marker {
+  fill: #004080;
+}
+.link-label {
+  font-size: 9px;
+  fill: #333;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.mode-toggle label {
+  font-size: 14px;
+  cursor: pointer;
+}
